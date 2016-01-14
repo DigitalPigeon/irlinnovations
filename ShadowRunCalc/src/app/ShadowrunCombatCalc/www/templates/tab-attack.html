@@ -1,0 +1,22 @@
+<ion-view view-title="Attack">
+  <ion-content class="padding">
+        
+      <h3>Attacker's Situation</h3>
+      
+      <ion-list >
+          <ion-item ng-repeat="rangedAttackerSituation in rangedAttackerSituations">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(item); $event.stopPropagation();" ng-model="item.checked" ng-class="item-divider:">
+                {{rangedAttackerSituation.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
+
+      <h3>Firing Mode</h3>
+      <p></p>
+
+      <h3>Defender's Situation</h3>
+      <p></p>
+
+  </ion-content>
+</ion-view>
