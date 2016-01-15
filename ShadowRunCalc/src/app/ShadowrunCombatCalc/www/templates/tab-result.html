@@ -2,16 +2,34 @@
     <ion-content class="padding">
         
 
-        <h3>Attacker Dice Pool Modifers</h3>
-        <p></p>
+        <h3>Attacker Dice Pool Modifers ({{attackerPoolTotal >= 0 ? '+' : ''}}{{attackerPoolTotal}})</h3>
+        <ion-list  >
+          <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-padding">
+                {{modifier.name}} ({{modifier.attackerPool >= 0 ? '+' : ''}}{{modifier.attackerPool}})
+          </ion-item>
+        </ion-list>
 
-        <h3>Damage Modifers</h3>
-        <p></p>
 
-        <h3>AP Modifier</h3>
-        <p></p>
+        <h3>Damage Modifers ({{dvTotal >= 0 ? '+' : ''}}{{dvTotal}})</h3>
+        <ion-list  >
+          <ion-item ng-repeat="modifier in selectedDvModifiers" class="row-no-padding">
+                {{modifier.name}} ({{modifier.dv >= 0 ? '+' : ''}}{{modifier.dv}})
+          </ion-item>
+        </ion-list>
 
-        <h3>Defender Dice Pool Modifier</h3>
-        <p></p>
+        <h3>AP Modifier ({{apTotal >= 0 ? '+' : ''}}{{apTotal}})</h3>
+        <ion-list  >
+          <ion-item ng-repeat="modifier in selectedApModifiers" class="row-no-padding">
+                {{modifier.name}} ({{modifier.ap >= 0 ? '+' : ''}}{{modifier.ap}})
+          </ion-item>
+        </ion-list>
+
+        <h3>Defender Dice Pool Modifier ({{defenderPoolTotal >= 0 ? '+' : ''}}{{defenderPoolTotal}})</h3>
+        <ion-list  >
+          <ion-item ng-repeat="modifier in selectedDefenderPoolModifiers" class="row-no-padding">
+                {{modifier.name}} ({{modifier.defenderPool >= 0 ? '+' : ''}}{{modifier.defenderPool}})
+          </ion-item>
+        </ion-list>
+        
     </ion-content>
 </ion-view>

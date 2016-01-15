@@ -1,10 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('EnvironmentCtrl', function ($scope) {
-    $scope.pol = "This is Environment";
-})
-
-.controller('AttackCtrl', function ($scope, RangedAttackerSituations) {
+.controller('AttackCtrl', function ($scope, rangedAttackerSituations, meleeAttackerSituations, firingModes, defenderSituations) {
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
@@ -13,13 +9,36 @@ angular.module('starter.controllers', [])
     //$scope.$on('$ionicView.enter', function(e) {
     //});
     $scope.pol = "This is attacks";
-    $scope.rangedAttackerSituations = RangedAttackerSituations.all();
-    $scope.remove = function (chat) {
-        Chats.remove(chat);
-    };
+    $scope.rangedAttackerSituations = rangedAttackerSituations.all();
+    $scope.meleeAttackerSituations = meleeAttackerSituations.all();
+    $scope.firingModes = firingModes.all();
+    $scope.defenderSituations = defenderSituations.all();
+    
 })
 
-.controller('ResultCtrl', function ($scope, $stateParams, Chats) {
-    $scope.pol = "This is Results";
-    $scope.chat = Chats.get($stateParams.chatId);
+.controller('GearCtrl', function ($scope, ammoTypes) {
+    $scope.ammoTypes = ammoTypes.all();
+})
+
+.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers) {
+    $scope.visibilityModifiers = visibilityModifiers.all();
+    $scope.lightModifiers = lightModifiers.all();
+    $scope.windModifiers = windModifiers.all();
+    $scope.rangeModifiers = rangeModifiers.all();
+})
+
+.controller('ResultCtrl', function ($scope, $stateParams, selectedModifiers) {
+    
+
+    $scope.$on('$ionicView.enter', function() {
+        $scope.selectedModifiers = selectedModifiers.all();
+        $scope.selectedAttackerPoolModifiers = selectedModifiers.affectsAttackerPool();
+        $scope.selectedDvModifiers = selectedModifiers.affectsDv();
+        $scope.selectedApModifiers = selectedModifiers.affectsAp();
+        $scope.selectedDefenderPoolModifiers = selectedModifiers.affectsDefenderPool();
+        $scope.attackerPoolTotal = selectedModifiers.attackerPoolTotal();
+        $scope.dvTotal = selectedModifiers.dvTotal();
+        $scope.apTotal = selectedModifiers.apTotal();
+        $scope.defenderPoolTotal = selectedModifiers.defenderPoolTotal();
+    });
 });

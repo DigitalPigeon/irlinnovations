@@ -1,22 +1,46 @@
 <ion-view view-title="Attack">
   <ion-content class="padding">
         
-      <h3>Attacker's Situation</h3>
-      
-      <ion-list >
-          <ion-item ng-repeat="rangedAttackerSituation in rangedAttackerSituations">
+      <h3>Ranged Attacker's Situation</h3>
+      <ion-list  >
+          <ion-item ng-repeat="rangedAttackerSituation in rangedAttackerSituations" class="row-no-padding">
               <label class="checkbox">
-                <input type="checkbox" ng-click="clickItem(item); $event.stopPropagation();" ng-model="item.checked" ng-class="item-divider:">
-                {{rangedAttackerSituation.name}}
+                  <input type="checkbox" ng-click="clickItem(rangedAttackerSituation); $event.stopPropagation();" ng-model="rangedAttackerSituation.checked" >
+                  {{rangedAttackerSituation.name}}
+              </label>              
+          </ion-item>
+      </ion-list>
+      
+      <h3>Melee Attacker's Situation</h3>
+      <ion-list  >
+          <ion-item ng-repeat="meleeAttackerSituation in meleeAttackerSituations" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(meleeAttackerSituation); $event.stopPropagation();" ng-model="meleeAttackerSituation.checked" >
+                {{meleeAttackerSituation.name}}
             </label>              
           </ion-item>
       </ion-list>
 
       <h3>Firing Mode</h3>
-      <p></p>
-
+      <ion-list  >
+          <ion-item ng-repeat="firingMode in firingModes" class="row-no-padding">
+              <label class="checkbox">
+                  <input type="checkbox" ng-click="clickItem(firingMode); $event.stopPropagation();" ng-model="firingMode.checked" >
+                  {{firingMode.name}}
+              </label>              
+          </ion-item>
+      </ion-list>
+      
+      
       <h3>Defender's Situation</h3>
-      <p></p>
+      <ion-list  >
+          <ion-item ng-repeat="defenderSituation in defenderSituations" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(defenderSituation); $event.stopPropagation();" ng-model="defenderSituation.checked" >
+                {{defenderSituation.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
 
   </ion-content>
 </ion-view>

@@ -50,6 +50,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
+      .state('tab.gear', {
+          url: '/gear',
+          views: {
+              'tab-gear': {
+                  templateUrl: 'templates/tab-gear.html',
+                  controller: 'GearCtrl'
+              }
+          }
+      })
+
     .state('tab.environment', {
         url: '/environment',
         views: {

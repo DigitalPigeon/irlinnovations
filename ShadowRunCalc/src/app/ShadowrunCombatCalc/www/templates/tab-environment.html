@@ -3,15 +3,45 @@
       
 
       <h3>Visibility</h3>
-      <p></p>
+      <ion-list  >
+          <ion-item ng-repeat="visibilityModifier in visibilityModifiers" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(visibilityModifier); $event.stopPropagation();" ng-model="visibilityModifier.checked" >
+                {{visibilityModifier.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
 
       <h3>Light &amp; Glare</h3>
-      <p></p>
+      <ion-list  >
+          <ion-item ng-repeat="lightModifier in lightModifiers" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(lightModifier); $event.stopPropagation();" ng-model="lightModifier.checked" >
+                {{lightModifier.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
       
       <h3>Wind</h3>
-      <p></p>
+      <ion-list  >
+          <ion-item ng-repeat="windModifier in windModifiers" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="clickItem(windModifier); $event.stopPropagation();" ng-model="windModifier.checked" >
+                {{windModifier.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
 
       <h3>Range</h3>
-      <p></p>
+      <ion-list  >
+          <ion-item ng-repeat="rangeModifier in rangeModifiers" class="row-no-padding">
+              <label class="checkbox">
+                  <input type="checkbox" ng-click="clickItem(rangeModifier); $event.stopPropagation();" ng-model="rangeModifier.checked" >
+                  {{rangeModifier.name}}
+              </label>              
+          </ion-item>
+      </ion-list>
+      
+
   </ion-content>
 </ion-view>
