@@ -1,11 +1,21 @@
 <ion-view view-title="Gear">
   <ion-content class="padding">
       
+      <h3>Equipment</h3>
+      <ion-list  >
+          <ion-item ng-repeat="equipmentItem in equipment" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="validateSelection(equipmentItem); $event.stopPropagation();" ng-model="equipmentItem.checked" >
+                {{equipmentItem.name}}
+            </label>              
+          </ion-item>
+      </ion-list>
+
       <h3>Ammunition</h3>
       <ion-list  >
           <ion-item ng-repeat="ammoType in ammoTypes" class="row-no-padding">
               <label class="checkbox">
-                <input type="checkbox" ng-click="clickItem(ammoType); $event.stopPropagation();" ng-model="ammoType.checked" >
+                <input type="checkbox" ng-click="validateSelection(ammoType); $event.stopPropagation();" ng-model="ammoType.checked" >
                 {{ammoType.name}}
             </label>              
           </ion-item>
