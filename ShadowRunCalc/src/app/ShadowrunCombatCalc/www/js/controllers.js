@@ -18,7 +18,7 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('Welcome', function () {
+.controller('AppCtrl', function ($scope) {
 })
 
 .controller('GearCtrl', function ($scope, equipment, ammoTypes, selectedModifiers) {

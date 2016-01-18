@@ -31,16 +31,49 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   // Each state's controller can be found in controllers.js
     $stateProvider
 
+    .state('app', {
+            url: '/app',
+            abstract: true,
+            templateUrl: 'templates/menu.html',
+            controller: 'AppCtrl'
+        })
+
+
     // setup an abstract state for the tabs directive
-      .state('tab', {
+      .state('app.tab', {
           url: '/tab',
-          abstract: true,
-          templateUrl: 'templates/tabs.html'
+          views:
+              {
+                  'menuContent':
+                      { templateUrl: 'templates/tabs.html' }
+                  }
+          
       })
+
+      .state('app.tabmelee', {
+            url: '/tabmelee',
+            views:
+                {
+                    'menuContent':
+                        { templateUrl: 'templates/tabs-melee.html' }
+                }
+
+      })
+
+    .state('app.tabmelee.attack', {
+        url: '/attack',
+        views: {
+            'tab-attack': {
+                templateUrl: 'templates/tabmelee-attack.html',
+                controller: 'MeleeAttackCtrl'
+            }
+        }
+    })
+
 
     // Each tab has its own nav history stack:
     
-    .state('tab.attack', {
+    .state('app.tab.attack', {
         url: '/attack',
         views: {
             'tab-attack': {
@@ -50,7 +83,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
-      .state('tab.gear', {
+      .state('app.tab.gear', {
           url: '/gear',
           views: {
               'tab-gear': {
@@ -60,7 +93,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
       })
 
-    .state('tab.environment', {
+    .state('app.tab.environment', {
         url: '/environment',
         views: {
             'tab-environment': {
@@ -69,7 +102,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             }
         }
     })
-      .state('tab.result', {
+      .state('app.tab.result', {
           url: '/result',
           views: {
               'tab-result': {
@@ -81,6 +114,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/attack');
+  $urlRouterProvider.otherwise('/app/tab/attack');
 
 });

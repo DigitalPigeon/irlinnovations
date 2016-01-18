@@ -330,6 +330,15 @@ angular.module('starter.services', [])
 
 }])
 
+.factory('attackType', function () {
+
+    var attackType = { name: 'Ranged' };
+
+    return {
+        attackType: attackType;
+        }
+    };
+})
 
 
 .factory('rangedAttackerSituations', function() {
