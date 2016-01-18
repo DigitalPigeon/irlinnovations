@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
 
-.factory('selectedModifiers', ['rangedAttackerSituations', 'meleeAttackerSituations', 'firingModes', 'choke', 'defenderSituations',
+.factory('modifiersService', ['rangedAttackerSituations', 'meleeAttackerSituations', 'firingModes', 'choke', 'defenderSituations',
                                 'equipment', 'ammoTypes', 
                                 'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
                                 '$filter', '$ionicPopup',
@@ -12,100 +12,55 @@ angular.module('starter.services', [])
         return {
             all: function() {
 
-                var selectedModifiers = [];
+                var modifiers = [];
                 
-                angular.forEach(rangedAttackerSituations.all(), function(value, key) {
-                
+                angular.forEach(rangedAttackerSituations.all(), function(value, key) {modifiers.push(value);});
+
+                angular.forEach(meleeAttackerSituations.all(), function(value, key) {modifiers.push(value);});
+
+                angular.forEach(firingModes.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(choke.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(equipment.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(ammoTypes.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(defenderSituations.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(visibilityModifiers.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(lightModifiers.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(windModifiers.all(), function (value, key) {modifiers.push(value);});
+
+                angular.forEach(rangeModifiers.all(), function (value, key) {modifiers.push(value);});
+
+                return modifiers;
+            },
+
+            selected: function() {
+                var modifiers = [];
+                angular.forEach(this.all(), function(value, key) {
                     if (value.checked) {
-                        selectedModifiers.push(value);
+                        modifiers.push(value);
                     }
                 });
-
-                angular.forEach(meleeAttackerSituations.all(), function(value, key) {
-                
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(firingModes.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(choke.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(equipment.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(ammoTypes.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(defenderSituations.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(visibilityModifiers.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(lightModifiers.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(windModifiers.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                angular.forEach(rangeModifiers.all(), function (value, key) {
-
-                    if (value.checked) {
-                        selectedModifiers.push(value);
-                    }
-                });
-
-                return selectedModifiers;
+                return modifiers;
             },
 
             affectsAttackerPool: function() {
 
-                var selectedModifiers = [];
+                var modifiers = [];
 
-                angular.forEach(this.all(), function (value, key) {
+                angular.forEach(this.selected(), function (value, key) {
 
                     if (value.attackerPool != 0) {
-                        selectedModifiers.push(value);
+                        modifiers.push(value);
                     }
                 });
 
-                return selectedModifiers;
+                return modifiers;
 
             },
 
@@ -124,16 +79,16 @@ angular.module('starter.services', [])
 
             affectsDv: function() {
 
-                var selectedModifiers = [];
+                var modifiers = [];
 
-                angular.forEach(this.all(), function (value, key) {
+                angular.forEach(this.selected(), function (value, key) {
 
                     if (value.dv != 0) {
-                        selectedModifiers.push(value);
+                        modifiers.push(value);
                     }
                 });
 
-                return selectedModifiers;
+                return modifiers;
 
             },
 
@@ -152,16 +107,16 @@ angular.module('starter.services', [])
 
             affectsAp: function() {
 
-                var selectedModifiers = [];
+                var modifiers = [];
 
-                angular.forEach(this.all(), function (value, key) {
+                angular.forEach(this.selected(), function (value, key) {
 
                     if (value.ap != 0) {
-                        selectedModifiers.push(value);
+                        modifiers.push(value);
                     }
                 });
 
-                return selectedModifiers;
+                return modifiers;
 
             },
 
@@ -180,16 +135,16 @@ angular.module('starter.services', [])
 
             affectsDefenderPool: function() {
 
-                var selectedModifiers = [];
+                var modifiers = [];
 
-                angular.forEach(this.all(), function (value, key) {
+                angular.forEach(this.selected(), function (value, key) {
                     
                     if (value.defenderPool != 0) {
-                        selectedModifiers.push(value);
+                        modifiers.push(value);
                     }
                 });
 
-                return selectedModifiers;
+                return modifiers;
 
             },
 
@@ -208,12 +163,16 @@ angular.module('starter.services', [])
 
 
             validateSelection: function (currentSelection) {
-                console.log('filtering');
+                
                 var validateSuccess = true;
                 var validationFailureReason = '';
-                var allSelected = this.all();
+                var allSelected = this.selected();
+                var all = this.all();
                 
                 //can not combine ranged and melee. This should be confirmed
+                //note: this check can be removed. Instead, the user is specifically choosing ranged or melee, and as such, only one
+                //or the other option will be used in results
+                /*
                 var rangedSelections = $filter('filter')(allSelected, { ranged: true });
                 var meleeSelections = $filter('filter')(allSelected, { melee: true });
                 
@@ -243,6 +202,7 @@ angular.module('starter.services', [])
                         }
                     });
                 }
+                */
 
                 var filteredResults;
 
@@ -309,6 +269,12 @@ angular.module('starter.services', [])
                     currentSelection.checked = true;
                 }
 
+                //the defenderProne options must be choosen together
+                if (currentSelection.defenderProne) {
+                    filteredResults = $filter('filter')(all, { defenderProne: true });
+                    angular.forEach(filteredResults, function(value, key) { value.checked = currentSelection.checked; });
+                }
+                
                 
 
                 if (!validateSuccess) {
@@ -330,12 +296,20 @@ angular.module('starter.services', [])
 
 }])
 
-.factory('attackType', function () {
+.factory('attackTypeService', function () {
 
     var attackType = { name: 'Ranged' };
 
-    return {
-        attackType: attackType;
+    return { 
+        rangedAttackType: 'Ranged',
+
+        meleeAttackType: 'Melee',
+        
+        attackType: attackType,
+        
+        changeAttackType: function (newAttackType) {
+            attackType.name = newAttackType;
+            return attackType;
         }
     };
 })
@@ -369,9 +343,10 @@ angular.module('starter.services', [])
             { id: 4, name: 'Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, melee: true },
             { id: 5, name: 'Called Shot (Vitals)', ap: 0, dv: 0, attackerPool: -4, defenderPool: 0, melee: true },
             { id: 6, name: 'Defender Receiving Charge', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },
-            { id: 7, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },
+            { id: 7, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, defenderProne:true },
             { id: 8, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 9, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true }
+            
         ];
 
     return {
@@ -428,7 +403,7 @@ angular.module('starter.services', [])
 
     var options = [
             { id: 1, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
-            { id: 2, name: 'Prone', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2 },
+            { id: 2, name: 'Prone', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, defenderProne: true },
             { id: 3, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1 },
             { id: 4, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3 },
             { id: 5, name: 'Running', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2 },

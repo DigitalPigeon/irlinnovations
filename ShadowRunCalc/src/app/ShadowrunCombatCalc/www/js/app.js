@@ -44,32 +44,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           url: '/tab',
           views:
               {
-                  'menuContent':
-                      { templateUrl: 'templates/tabs.html' }
+                  'menuContent': { templateUrl: 'templates/tabs.html' }
                   }
           
       })
-
-      .state('app.tabmelee', {
-            url: '/tabmelee',
-            views:
-                {
-                    'menuContent':
-                        { templateUrl: 'templates/tabs-melee.html' }
-                }
-
-      })
-
-    .state('app.tabmelee.attack', {
-        url: '/attack',
-        views: {
-            'tab-attack': {
-                templateUrl: 'templates/tabmelee-attack.html',
-                controller: 'MeleeAttackCtrl'
-            }
-        }
-    })
-
 
     // Each tab has its own nav history stack:
     

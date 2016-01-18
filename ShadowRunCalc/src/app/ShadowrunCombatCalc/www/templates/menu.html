@@ -15,12 +15,12 @@
             </ion-header-bar>
             <ion-content>
                 <ion-list>
-                    <ion-item menu-close href="#/app/tab/attack">
+                    <ion-item menu-close ng-click="changeAttackType('{{rangedAttackType}}')" href="#/app/tab/attack" >
                         Ranged Attack
                     </ion-item>
                 </ion-list>
                 <ion-list>
-                    <ion-item menu-close href="javascript:$state.go('app.tabmelee.attack');">
+                    <ion-item menu-close ng-click="changeAttackType('{{meleeAttackType}}')"  href="#/app/tab/attack" >
                         Melee Attack
                     </ion-item>
                 </ion-list>
