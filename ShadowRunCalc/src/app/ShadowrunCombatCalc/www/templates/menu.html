@@ -15,22 +15,22 @@
             </ion-header-bar>
             <ion-content>
                 <ion-list>
-                    <ion-item menu-close ng-click="changeAttackType('{{rangedAttackType}}')" href="#/app/tab/attack" >
+                    <ion-item menu-close ng-click="changeAttackType('{{rangedAttackType}}')"  >
                         Ranged Attack
                     </ion-item>
                 </ion-list>
                 <ion-list>
-                    <ion-item menu-close ng-click="changeAttackType('{{meleeAttackType}}')"  href="#/app/tab/attack" >
+                    <ion-item menu-close ng-click="changeAttackType('{{meleeAttackType}}')"   >
                         Melee Attack
                     </ion-item>
                 </ion-list>
                 <ion-list>
-                    <ion-item menu-close href="#/app/tab/gear">
+                    <ion-item menu-close ng-click="recordActiveTab()" href="#/app/gear">
                         My Stuff
                     </ion-item>
                 </ion-list>
                 <ion-list>
-                    <ion-item menu-close href="#/app/tab/environment">
+                    <ion-item menu-close ng-click="recordActiveTab()" href="#/app/environment">
                         Environment
                     </ion-item>
                 </ion-list>

@@ -1,60 +1,51 @@
-<ion-view view-title="Attack">
+<ion-view view-title="{{attackType.name}} Attack">
     <ion-content class="padding">
         
+        <h3>Attacker's Situation</h3>
+        <ion-list>
+            <ion-item ng-repeat="item in attackerSituations" class="row-no-padding" ng-if="isModifierApplicable(item)">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>
+            </ion-item>
+        </ion-list><p>&nbsp;</p>
+
+        <!-- Since we know firing mode and choke only apply to ranged, don't even render their headers for non ranged attacks -->
         <div ng-if="attackType.name==rangedAttackType">
-            <h3>Ranged Attacker's Situation</h3>
+
+            <h3>Firing Mode</h3>
             <ion-list>
-                <ion-item ng-repeat="rangedAttackerSituation in rangedAttackerSituations" class="row-no-padding">
+                <ion-item ng-repeat="item in firingModes" class="row-no-padding">
                     <label class="checkbox">
-                        <input type="checkbox" ng-click="validateSelection(rangedAttackerSituation); $event.stopPropagation();" ng-model="rangedAttackerSituation.checked" data-ui-sref-opts="{reload: true}">
-                        {{rangedAttackerSituation.name}}
+                        <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
+                        {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
                     </label>
                 </ion-item>
             </ion-list>
             
-            <h3>Firing Mode</h3>
-            <ion-list>
-                <ion-item ng-repeat="firingMode in firingModes" class="row-no-padding">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-click="validateSelection(firingMode); $event.stopPropagation();" ng-model="firingMode.checked" data-ui-sref-opts="{reload: true}">
-                        {{firingMode.name}}
-                    </label>
-                </ion-item>
-            </ion-list>
+            <h3>Ammunition</h3>
+          <ion-list  >
+              <ion-item ng-repeat="item in ammoTypes" class="row-no-padding">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>              
+              </ion-item>
+          </ion-list>
 
             <h3>Shotgun Choke</h3>
             <ion-list>
-                <ion-item ng-repeat="shotgunChoke in choke" class="row-no-padding">
+                <ion-item ng-repeat="item in choke" class="row-no-padding">
                     <label class="checkbox">
-                        <input type="checkbox" ng-click="validateSelection(shotgunChoke); $event.stopPropagation();" ng-model="shotgunChoke.checked">
-                        {{shotgunChoke.name}}
+                        <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
+                        {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
                     </label>
                 </ion-item>
             </ion-list>
 
         </div>
         
-        <div ng-if="attackType.name==meleeAttackType">
-            <h3>Melee Attacker's Situation</h3>
-            <ion-list>
-                <ion-item ng-repeat="meleeAttackerSituation in meleeAttackerSituations" class="row-no-padding">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-click="validateSelection(meleeAttackerSituation); $event.stopPropagation();" ng-model="meleeAttackerSituation.checked">
-                        {{meleeAttackerSituation.name}}
-                    </label>
-                </ion-item>
-            </ion-list>
-        </div>
-
-        <h3>Defender's Situation</h3>
-        <ion-list>
-            <ion-item ng-repeat="defenderSituation in defenderSituations" class="row-no-padding">
-                <label class="checkbox">
-                    <input type="checkbox" ng-click="validateSelection(defenderSituation); $event.stopPropagation();" ng-model="defenderSituation.checked">
-                    {{defenderSituation.name}}
-                </label>
-            </ion-item>
-        </ion-list>
 
     </ion-content>
 </ion-view>

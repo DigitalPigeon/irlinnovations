@@ -1,0 +1,25 @@
+<ion-view view-title="{{attackType.name}} Target">
+    <ion-content class="padding">
+        
+        <h3>Defender's Situation</h3>
+        <ion-list>
+            <ion-item ng-repeat="item in defenderSituations" class="row-no-padding" ng-if="isModifierApplicable(item)">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>
+            </ion-item>
+        </ion-list>
+        
+        <h3>Cover</h3>
+        <ion-list>
+            <ion-item ng-repeat="item in cover" class="row-no-padding" ng-if="isModifierApplicable(item)">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

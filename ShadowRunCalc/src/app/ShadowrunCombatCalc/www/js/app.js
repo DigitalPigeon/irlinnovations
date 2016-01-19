@@ -61,21 +61,32 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
-      .state('app.tab.gear', {
+
+    .state('app.tab.target', {
+        url: '/target',
+        views: {
+            'tab-target': {
+                templateUrl: 'templates/tab-target.html',
+                controller: 'TargetCtrl'
+            }
+        }
+    })
+
+      .state('app.gear', {
           url: '/gear',
           views: {
-              'tab-gear': {
-                  templateUrl: 'templates/tab-gear.html',
+              'menuContent': {
+                  templateUrl: 'templates/gear.html',
                   controller: 'GearCtrl'
               }
           }
       })
 
-    .state('app.tab.environment', {
+    .state('app.environment', {
         url: '/environment',
         views: {
-            'tab-environment': {
-                templateUrl: 'templates/tab-environment.html',
+            'menuContent': {
+                templateUrl: 'templates/environment.html',
                 controller: 'EnvironmentCtrl'
             }
         }

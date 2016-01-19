@@ -1,22 +1,22 @@
 angular.module('starter.services', [])
 
 
-.factory('modifiersService', ['rangedAttackerSituations', 'meleeAttackerSituations', 'firingModes', 'choke', 'defenderSituations',
+.factory('modifiersService', ['attackerSituations', 'firingModes', 'choke', 'defenderSituations', 'coverService',
                                 'equipment', 'ammoTypes', 
                                 'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
+                                'attackTypeService', 
                                 '$filter', '$ionicPopup',
-                                function (rangedAttackerSituations, meleeAttackerSituations, firingModes, choke, defenderSituations, 
+                                function (attackerSituations, firingModes, choke, defenderSituations, coverService,
                                             equipment, ammoTypes,
                                             visibilityModifiers, lightModifiers, windModifiers, rangeModifiers,
+                                            attackTypeService,
                                             $filter, $ionicPopup) {
         return {
             all: function() {
 
                 var modifiers = [];
                 
-                angular.forEach(rangedAttackerSituations.all(), function(value, key) {modifiers.push(value);});
-
-                angular.forEach(meleeAttackerSituations.all(), function(value, key) {modifiers.push(value);});
+                angular.forEach(attackerSituations.all(), function(value, key) {modifiers.push(value);});
 
                 angular.forEach(firingModes.all(), function (value, key) {modifiers.push(value);});
 
@@ -27,6 +27,8 @@ angular.module('starter.services', [])
                 angular.forEach(ammoTypes.all(), function (value, key) {modifiers.push(value);});
 
                 angular.forEach(defenderSituations.all(), function (value, key) {modifiers.push(value);});
+                
+                angular.forEach(coverService.all(), function (value, key) {modifiers.push(value);});
 
                 angular.forEach(visibilityModifiers.all(), function (value, key) {modifiers.push(value);});
 
@@ -55,7 +57,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.selected(), function (value, key) {
 
-                    if (value.attackerPool != 0) {
+                    if (value.attackerPool != 0 && attackTypeService.isModifierApplicable(value)) {
                         modifiers.push(value);
                     }
                 });
@@ -83,7 +85,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.selected(), function (value, key) {
 
-                    if (value.dv != 0) {
+                    if (value.dv != 0 && attackTypeService.isModifierApplicable(value)) {
                         modifiers.push(value);
                     }
                 });
@@ -111,7 +113,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.selected(), function (value, key) {
 
-                    if (value.ap != 0) {
+                    if (value.ap != 0 && attackTypeService.isModifierApplicable(value)) {
                         modifiers.push(value);
                     }
                 });
@@ -139,7 +141,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.selected(), function (value, key) {
                     
-                    if (value.defenderPool != 0) {
+                    if (value.defenderPool != 0 && attackTypeService.isModifierApplicable(value)) {
                         modifiers.push(value);
                     }
                 });
@@ -164,69 +166,12 @@ angular.module('starter.services', [])
 
             validateSelection: function (currentSelection) {
                 
-                var validateSuccess = true;
-                var validationFailureReason = '';
                 var allSelected = this.selected();
                 var all = this.all();
                 
-                //can not combine ranged and melee. This should be confirmed
-                //note: this check can be removed. Instead, the user is specifically choosing ranged or melee, and as such, only one
-                //or the other option will be used in results
-                /*
-                var rangedSelections = $filter('filter')(allSelected, { ranged: true });
-                var meleeSelections = $filter('filter')(allSelected, { melee: true });
-                
-                if (rangedSelections.length > 0 && meleeSelections.length > 0) {
-
-                    var switchingTo = currentSelection.ranged ? 'Ranged' : 'Melee';
-                    var switchingFrom = currentSelection.ranged ? 'Melee' : 'Ranged';
-
-                    $ionicPopup.confirm({
-                        title: 'Switch to ' + switchingTo,
-                        template: 'Deselect all ' + switchingFrom + ' options?'
-                    })
-                    .then(function(response) {
-                        if (response) {
-                            //user chose to switch, so if we were ranged, clear all melee... 
-                            if (currentSelection.ranged) {
-                                angular.forEach(meleeSelections, function(value, key) { value.checked = false; });
-                            } 
-                            //... and if we were melee, clear all ranged
-                            else {
-                                angular.forEach(rangedSelections, function(value, key) { value.checked = false; });
-                            }
-                        } 
-                        //user chose to keep original attack type, so clear the one he just chose
-                        else {
-                            currentSelection.checked = false;
-                        }
-                    });
-                }
-                */
-
                 var filteredResults;
 
-                //can not use multiple smartgun options
-                filteredResults = $filter('filter')(allSelected, { smartgun: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-                
-                //can not use multiple smartgun options
-                filteredResults = $filter('filter')(allSelected, { choke: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
-                //max one fire mode
-                filteredResults = $filter('filter')(allSelected, { fireMode: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
+               
                 //max one cover
                 filteredResults = $filter('filter')(allSelected, { cover: true });
                 if (filteredResults.length > 1) {
@@ -234,62 +179,59 @@ angular.module('starter.services', [])
                     currentSelection.checked = true;
                 }
 
-                //max one ammo
-                filteredResults = $filter('filter')(allSelected, { ammo: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
+                //only one option in an exclusive group is allowed
+                if (currentSelection.checked && currentSelection.exclusiveGroup != null) {
+                    //get all selected modifiers where the exclusiveGroup is the same as the current selections exclusive group, and deselct them
+                    filteredResults = $filter('filter')(all, { exclusiveGroup: currentSelection.exclusiveGroup});
+                    angular.forEach(filteredResults, function(value, key) {
+                         //do not modifer outselves
+                         if (value != currentSelection) {
+                            value.checked = false;    
+                         }
+                    });
                 }
 
-                //visibility one ammo
-                filteredResults = $filter('filter')(allSelected, { visibility: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
-                //light one ammo
-                filteredResults = $filter('filter')(allSelected, { light: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
-                //wind one ammo
-                filteredResults = $filter('filter')(allSelected, { wind: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
-                //range one ammo
-                filteredResults = $filter('filter')(allSelected, { range: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
-                //the defenderProne options must be choosen together
-                if (currentSelection.defenderProne) {
-                    filteredResults = $filter('filter')(all, { defenderProne: true });
-                    angular.forEach(filteredResults, function(value, key) { value.checked = currentSelection.checked; });
+                //mutual groups must be chosen together
+                if (currentSelection.mutualGroup != null) {
+                    
+                    //get all modifiers where the mutualGroup is the same as the current selections mutual group
+                    filteredResults = $filter('filter')(all, { mutualGroup: currentSelection.mutualGroup });
+                    angular.forEach(filteredResults, function(value, key) {
+                         value.checked = currentSelection.checked;
+                    });
                 }
                 
-                
-
-                if (!validateSuccess) {
-                    console.log(validationFailureReason);
-                    currentSelection.checked = !currentSelection.checked;
-
-                    $ionicPopup.alert({
-                         title: 'Invalid Selection!',
-                         template: validationFailureReason
-                       });
-                }
-
-                return validateSuccess;
+                return true;
 
             },
+
+            formatStats: function (item, prefix, suffix, seperator) {
+                var stats = [];
+                
+                if (item.attackerPool != 0) {
+                    stats.push('Att: ' + (item.attackerPool>=0?'+':'') + item.attackerPool);
+                }
+
+                if (item.defenderPool != 0) {
+                    stats.push('Def: ' + (item.defenderPool >= 0 ? '+' : '') + item.defenderPool);
+                }
+
+                if (item.dv != 0) {
+                    stats.push('DV: ' + (item.dv >= 0 ? '+' : '') + item.dv);
+                }
+
+                if (item.ap != 0) {
+                    stats.push('AP: ' + (item.ap >= 0 ? '+' : '') + item.ap);
+                }
+
+                if (stats.length > 0) {
+                    return prefix + stats.join(seperator) + suffix;
+                } else {
+                    return '';
+                }
+
+                
+            }
     };
 
 
@@ -310,12 +252,64 @@ angular.module('starter.services', [])
         changeAttackType: function (newAttackType) {
             attackType.name = newAttackType;
             return attackType;
+        },
+
+        isModifierApplicable: function(modifier) {
+            //if we are looking for ranged but we find a specific melee modifier, it is not applicable
+            if (attackType.name == 'Ranged' && modifier.melee) {
+                return false;
+            }
+
+            //if we are looking for melee but we find a specific ranged modifier, it is not applicable
+            if (attackType.name == 'Melee' && modifier.ranged) {
+                return false;
+            }
+
+            //in all other cases (including where no specific modifer is supplied) then we treat as applicable
+            return true;
         }
     };
 })
 
+.factory('tablessStateService',['$rootScope', '$state', '$ionicHistory', '$ionicPlatform',  function ($rootScope, $state, $ionicHistory, $ionicPlatform) {
 
-.factory('rangedAttackerSituations', function() {
+    return { 
+        
+        enable: function ($scope) {
+            
+            $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+                viewData.enableBack = true;
+            });
+
+            //override back button behavior
+            var customBack = function() {
+                $state.go($rootScope.lastTabsState);
+            }
+
+            //nav back
+            var oldSoftBack = $rootScope.$ionicGoBack;
+            var deregisterSoftBack = function() { $rootScope.$ionicGoBack = oldSoftBack; };
+            $rootScope.$ionicGoBack = customBack;
+    
+            //andorid back button
+            var deregisterHardBack = $ionicPlatform.registerBackButtonAction(customBack, 101);
+
+            //restore default behaviour for other controllers
+            $scope.$on('destroy', function() {
+                deregisterHardBack();
+                deregisterSoftBack();
+            });
+
+        },
+
+        trackLastTabState: function () {
+            $rootScope.lastTabsState = $ionicHistory.currentView().stateId;
+        }
+    };
+}])
+
+
+.factory('attackerSituations', function() {
 
     var options = [
             { id: 1, name: 'Firing from Cover w/ Imaging', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, ranged: true },
@@ -324,29 +318,17 @@ angular.module('starter.services', [])
             { id: 4, name: 'Running', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, ranged: true },
             { id: 5, name: 'Using Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, ranged: true },
             { id: 6, name: 'Blind Fire', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, ranged: true },
-            { id: 7, name: 'Called Shot (Vitals)', ap: 0, dv: 2, attackerPool: -4, defenderPool: 0, ranged: true }
-        ];
-
-    return {
-        all: function () {
-            return options;
-        }
-    };
-})
-
-.factory('meleeAttackerSituations', function() {
-
-    var options = [
-            { id: 1, name: 'Charging Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 2, name: 'Attacking from Prone', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, melee: true },
-            { id: 3, name: 'Superior Position', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 4, name: 'Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, melee: true },
-            { id: 5, name: 'Called Shot (Vitals)', ap: 0, dv: 0, attackerPool: -4, defenderPool: 0, melee: true },
-            { id: 6, name: 'Defender Receiving Charge', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },
-            { id: 7, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, defenderProne:true },
-            { id: 8, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 9, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true }
+            { id: 7, name: 'Called Shot (Vitals)', ap: 0, dv: 2, attackerPool: -4, defenderPool: 0, ranged: true },
             
+            { id: 8, name: 'Charging Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
+            { id: 9, name: 'Attacking from Prone', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, melee: true },
+            { id: 10, name: 'Superior Position', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
+            { id: 11, name: 'Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, melee: true },
+            { id: 12, name: 'Called Shot (Vitals)', ap: 0, dv: 0, attackerPool: -4, defenderPool: 0, melee: true },
+            { id: 13, name: 'Defender Receiving Charge', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'setToReceiveCharge' },
+            { id: 14, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'defenderProne' },
+            { id: 15, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
+            { id: 16, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true }
         ];
 
     return {
@@ -355,19 +337,20 @@ angular.module('starter.services', [])
         }
     };
 })
+
 
 .factory('firingModes', function () {
 
     var options = [
-            { id: 1, name: 'Single Shot', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, fireMode: true, ranged: true },
-            { id: 2, name: 'Semi Automatic', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, fireMode: true, ranged: true },
-            { id: 3, name: 'Semi Automatic Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, fireMode: true, ranged: true },
-            { id: 4, name: 'Short Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, fireMode: true, ranged: true },
-            { id: 5, name: 'Long Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -5, fireMode: true, ranged: true },
-            { id: 4, name: 'Aimed Burst', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, fireMode: true, ranged: true },
-            { id: 6, name: 'Full Auto Long Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -5, fireMode: true, ranged: true },
-            { id: 7, name: 'Full Auto Full Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -9, fireMode: true, ranged: true },
-            { id: 8, name: 'Full Auto Brain Buster', ap: 0, dv: 2, attackerPool: 0, defenderPool: 0, fireMode: true, ranged: true }
+            { id: 1, name: 'Single Shot', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 2, name: 'Semi Automatic', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 3, name: 'Semi Automatic Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 4, name: 'Short Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 5, name: 'Long Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 4, name: 'Aimed Burst', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 6, name: 'Full Auto Long Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 7, name: 'Full Auto Full Burst', ap: 0, dv: 0, attackerPool: 0, defenderPool: -9, exclusiveGroup: 'fireMode', ranged: true },
+            { id: 8, name: 'Full Auto Brain Buster', ap: 0, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'fireMode', ranged: true }
         ];
 
     return {
@@ -380,16 +363,31 @@ angular.module('starter.services', [])
 .factory('choke', function () {
 
     var options = [
-            { id: 1, name: 'Shotgun Narrow Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -1, choke: true, ranged: true },
-            { id: 2, name: 'Shotgun Medium Spread @ Short', ap: 0, dv: -1, attackerPool: 0, defenderPool: -3, choke: true, ranged: true },
-            { id: 3, name: 'Shotgun Medium Spread @ Medium', ap: 0, dv: -3, attackerPool: 0, defenderPool: -3, choke: true, ranged: true },
-            { id: 4, name: 'Shotgun Medium Spread @ Long', ap: 0, dv: -5, attackerPool: 0, defenderPool: -3, choke: true, ranged: true },
-            { id: 5, name: 'Shotgun Medium Spread @ Extreme', ap: 0, dv: -7, attackerPool: 0, defenderPool: -3, choke: true, ranged: true },
-            { id: 6, name: 'Shotgun Wide Spread @ Short', ap: 0, dv: -3, attackerPool: 0, defenderPool: -5, choke: true, ranged: true },
-            { id: 7, name: 'Shotgun Wide Spread @ Medium', ap: 0, dv: -5, attackerPool: 0, defenderPool: -5, choke: true, ranged: true },
-            { id: 8, name: 'Shotgun Wide Spread @ Long', ap: 0, dv: -7, attackerPool: 0, defenderPool: -5, choke: true, ranged: true },
-            { id: 9, name: 'Shotgun Wide Spread @ Extreme', ap: 0, dv: -9, attackerPool: 0, defenderPool: -5, choke: true, ranged: true }
+            { id: 1, name: 'Shotgun Narrow Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -1, exclusiveGroup: 'choke', ranged: true },
+            { id: 2, name: 'Shotgun Medium Spread @ Short', ap: 0, dv: -1, attackerPool: 0, defenderPool: -3, exclusiveGroup: 'choke', ranged: true },
+            { id: 3, name: 'Shotgun Medium Spread @ Medium', ap: 0, dv: -3, attackerPool: 0, defenderPool: -3, exclusiveGroup: 'choke', ranged: true },
+            { id: 4, name: 'Shotgun Medium Spread @ Long', ap: 0, dv: -5, attackerPool: 0, defenderPool: -3, exclusiveGroup: 'choke', ranged: true },
+            { id: 5, name: 'Shotgun Medium Spread @ Extreme', ap: 0, dv: -7, attackerPool: 0, defenderPool: -3, exclusiveGroup: 'choke', ranged: true },
+            { id: 6, name: 'Shotgun Wide Spread @ Short', ap: 0, dv: -3, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'choke', ranged: true },
+            { id: 7, name: 'Shotgun Wide Spread @ Medium', ap: 0, dv: -5, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'choke', ranged: true },
+            { id: 8, name: 'Shotgun Wide Spread @ Long', ap: 0, dv: -7, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'choke', ranged: true },
+            { id: 9, name: 'Shotgun Wide Spread @ Extreme', ap: 0, dv: -9, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'choke', ranged: true }
 
+        ];
+
+    return {
+        all: function () {
+            return options;
+        }
+    };
+})
+
+.factory('coverService', function () {
+
+    var options = [
+            { id: 1, name: 'Partial Cover', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2, exclusiveGroup: 'cover' },
+            { id: 2, name: 'Good Cover', ap: 0, dv: 0, attackerPool: 0, defenderPool: 4, exclusiveGroup: 'cover' }
+            
         ];
 
     return {
@@ -402,13 +400,12 @@ angular.module('starter.services', [])
 .factory('defenderSituations', function () {
 
     var options = [
-            { id: 1, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
-            { id: 2, name: 'Prone', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, defenderProne: true },
-            { id: 3, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1 },
-            { id: 4, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3 },
-            { id: 5, name: 'Running', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2 },
-            { id: 6, name: 'Good Cover', ap: 0, dv: 0, attackerPool: 0, defenderPool: 4, cover:true },
-            { id: 7, name: 'Partial Cover', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2, cover:true }
+            { id: 1, name: 'Prone', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, mutualGroup: 'defenderProne' },
+            { id: 2, name: 'Running', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2 },
+            { id: 3, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
+            { id: 4, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true, mutualGroup: 'setToReceiveCharge' },
+            { id: 5, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, ranged:true }
+            
         ];
 
     return {
@@ -423,18 +420,18 @@ angular.module('starter.services', [])
 .factory('ammoTypes', function () {
 
     var options = [
-            { id: 1, name: 'APDS', ap: -4, dv: 0, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 2, name: 'Explosive', ap: -1, dv: 1, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 3, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 4, name: 'Gel', ap: 1, dv: 0, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 5, name: 'Hollow Point', ap: 2, dv: 1, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 6, name: 'Stick-n-Shock', ap: -5, dv: -2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 7, name: 'EX-Explosive', ap: -1, dv: 2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 8, name: 'Frangible', ap: 4, dv: -1, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 9, name: 'Flare (@ <60m)', ap: 2, dv: -2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 10, name: 'Flare (@ 60m-62m)', ap: -3, dv: 2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 11, name: 'Tracker', ap: -2, dv: -2, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true },
-            { id: 12, name: 'Capsule', ap: 4, dv: -4, attackerPool: 0, defenderPool: 0, ammo: true, ranged: true }
+            { id: 1, name: 'APDS', ap: -4, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 2, name: 'Explosive', ap: -1, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 3, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 4, name: 'Gel', ap: 1, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 5, name: 'Hollow Point', ap: 2, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 6, name: 'Stick-n-Shock', ap: -5, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 7, name: 'EX-Explosive', ap: -1, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 8, name: 'Frangible', ap: 4, dv: -1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 9, name: 'Flare @ <60m', ap: 2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 10, name: 'Flare @ 60m-62m', ap: -3, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 11, name: 'Tracker', ap: -2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 12, name: 'Capsule', ap: 4, dv: -4, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true }
         ];
 
     return {
@@ -448,8 +445,8 @@ angular.module('starter.services', [])
 .factory('equipment', function () {
 
     var options = [
-            { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, smartgun:true },
-            { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, smartgun:true }
+            { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
+            { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' }
         ];
 
     return {
@@ -462,9 +459,9 @@ angular.module('starter.services', [])
 .factory('visibilityModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Light Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, visibility:true },
-            { id: 2, name: 'Moderate Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, visibility:true },
-            { id: 3, name: 'Heavy Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, visibility:true }
+            { id: 1, name: 'Light Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'visibility' },
+            { id: 2, name: 'Moderate Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, exclusiveGroup: 'visibility' },
+            { id: 3, name: 'Heavy Rain / Fog / Smoke', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, exclusiveGroup: 'visibility' }
         ];
 
     return {
@@ -478,9 +475,9 @@ angular.module('starter.services', [])
 .factory('lightModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Partial Light / Weak Glare', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, light:true },
-            { id: 2, name: 'Dim Light / Moderate Glare', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, light:true },
-            { id: 3, name: 'Total Darkness / Blinding Glare', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, light:true }
+            { id: 1, name: 'Partial Light / Weak Glare', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'light' },
+            { id: 2, name: 'Dim Light / Moderate Glare', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, exclusiveGroup: 'light' },
+            { id: 3, name: 'Total Darkness / Blinding Glare', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, exclusiveGroup: 'light' }
         ];
 
     return {
@@ -493,9 +490,9 @@ angular.module('starter.services', [])
 .factory('windModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Light Winds', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, wind:true },
-            { id: 2, name: 'Moderate Winds', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, wind:true },
-            { id: 3, name: 'Heavy Winds', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, wind:true }
+            { id: 1, name: 'Light Winds', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'wind', ranged:true },
+            { id: 2, name: 'Moderate Winds', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, exclusiveGroup: 'wind', ranged:true },
+            { id: 3, name: 'Heavy Winds', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, exclusiveGroup: 'wind', ranged:true }
         ];
 
     return {
@@ -509,9 +506,9 @@ angular.module('starter.services', [])
 .factory('rangeModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Medium', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, range:true },
-            { id: 2, name: 'Long', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, range:true },
-            { id: 3, name: 'Extreme', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, range:true }
+            { id: 1, name: 'Medium', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
+            { id: 2, name: 'Long', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
+            { id: 3, name: 'Extreme', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true }
         ];
 
     return {

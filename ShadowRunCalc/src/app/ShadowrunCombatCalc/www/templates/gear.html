@@ -1,0 +1,16 @@
+<ion-view view-title="Gear">
+  <ion-content class="padding">
+      
+      <h3>Equipment</h3>
+      <ion-list  >
+          <ion-item ng-repeat="item in equipment" class="row-no-padding">
+              <label class="checkbox">
+                <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+            </label>              
+          </ion-item>
+      </ion-list>
+      
+      
+  </ion-content>
+</ion-view>

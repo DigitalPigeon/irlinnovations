@@ -1,0 +1,47 @@
+<ion-view view-title="Environment">
+    
+    <ion-content class="padding">
+    
+        <h3>Visibility</h3>
+        <ion-list  >
+            <ion-item ng-repeat="item in visibilityModifiers" class="row-no-padding">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>              
+            </ion-item>
+        </ion-list>
+
+        <h3>Light &amp; Glare</h3>
+        <ion-list  >
+            <ion-item ng-repeat="item in lightModifiers" class="row-no-padding">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>              
+            </ion-item>
+        </ion-list>
+      
+        <h3>Wind</h3>
+        <ion-list  >
+            <ion-item ng-repeat="item in windModifiers" class="row-no-padding">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>              
+            </ion-item>
+        </ion-list>
+
+        <h3>Range</h3>
+        <ion-list  >
+            <ion-item ng-repeat="item in rangeModifiers" class="row-no-padding">
+                <label class="checkbox">
+                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
+                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                </label>              
+            </ion-item>
+        </ion-list>
+      
+
+    </ion-content>
+</ion-view>
