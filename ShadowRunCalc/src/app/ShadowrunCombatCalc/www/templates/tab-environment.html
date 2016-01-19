@@ -1,4 +1,4 @@
-<ion-view view-title="Environment">
+<ion-view view-title="{{attackType.name}} Environment">
     
     <ion-content>
     
@@ -21,18 +21,21 @@
                 </label>
             </ion-item>
         </ion-list>
-      
-        <h3>Wind</h3>
-        <ion-list  >
-            <ion-item ng-repeat="item in windModifiers" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
-                <label class="checkbox">
-                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
-                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
-                </label>
-            </ion-item>
-        </ion-list>
+        
+        <p>&nbsp;</p>
+        <div ng-if="attackType.name==rangedAttackType">
 
-        <h3>Range</h3>
+            <h3>Wind</h3>
+            <ion-list  >
+                <ion-item ng-repeat="item in windModifiers" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
+                        {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                    </label>
+                </ion-item>
+            </ion-list>
+
+            <h3>Range</h3>
         <ion-list  >
             <ion-item ng-repeat="item in rangeModifiers" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
                 <label class="checkbox">
@@ -41,6 +44,8 @@
                 </label>
             </ion-item>
         </ion-list>
+        
+        </div>
       
 
     </ion-content>

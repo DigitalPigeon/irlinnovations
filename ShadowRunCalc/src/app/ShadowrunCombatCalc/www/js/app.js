@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     //configure tab position
-    $ionicConfigProvider.tabs.position('top'); // other values: top
+    $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -77,6 +77,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
+    .state('app.tab.environment', {
+        url: '/environment',
+        views: {
+            'tab-environment': {
+                templateUrl: 'templates/tab-environment.html',
+                controller: 'EnvironmentCtrl'
+            }
+        }
+    })
+
   .state('app.tab.result', {
       url: '/result',
       views: {
@@ -87,25 +97,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
   })
 
-      .state('app.gear', {
-          url: '/gear',
+      .state('app.myCharacter', {
+          url: '/myCharacter',
           views: {
               'menuContent': {
-                  templateUrl: 'templates/gear.html',
-                  controller: 'GearCtrl'
+                  templateUrl: 'templates/myCharacter.html',
+                  controller: 'MyCharacterCtrl'
               }
           }
       })
-
-    .state('app.environment', {
-        url: '/environment',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/environment.html',
-                controller: 'EnvironmentCtrl'
-            }
-        }
-    })
+      
 
     .state('app.firingMode', {
         url: '/firingMode',

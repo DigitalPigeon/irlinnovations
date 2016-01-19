@@ -1,7 +1,7 @@
 {
   "name": "shadowruncombatcalc",
-  "version": "1.1.1",
-  "description": "ShadowrunCombatCalc: An Ionic project",
+  "version": "0.9.6",
+  "description": "Shadowrun Combat Calculator",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",

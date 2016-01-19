@@ -22,9 +22,9 @@ angular.module('starter.controllers', [])
     //
     
     $scope.$on('$ionicView.enter', function (e) {
-        $scope.firingMode = firingModes.selected();
-        $scope.ammo = ammoTypes.selected();
-        $scope.choke = choke.selected();
+        $scope.firingMode = firingModes.selected() || {name: 'No Firing Mode Selected', checked:false};
+        $scope.ammo = ammoTypes.selected() || { name: 'No Ammo Selected', checked: false };
+        $scope.choke = choke.selected() || { name: 'No Choke Selected', checked: false };
     });
     
     $scope.attackType = attackTypeService.attackType;
@@ -82,20 +82,18 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('GearCtrl', function ($scope, equipment, modifiersService, tablessStateService) {
+.controller('MyCharacterCtrl', function ($scope, equipmentService, modifiersService, tablessStateService) {
 
     tablessStateService.enable($scope);
 
-    $scope.equipment = equipment.all();
+    $scope.equipment = equipmentService.all();
 
     $scope.formatStats = modifiersService.formatStats;
 
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 })
 
-.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
+.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService) {
 
     $scope.visibilityModifiers = visibilityModifiers.all();
     $scope.lightModifiers = lightModifiers.all();
@@ -113,6 +111,7 @@ angular.module('starter.controllers', [])
 .controller('FiringModeCtrl', function ($scope, firingModes, modifiersService, tablessStateService) {
 
     tablessStateService.enable($scope);
+    $scope.goBack = tablessStateService.goBack;
 
     $scope.firingModes = firingModes.all();
 
@@ -120,12 +119,14 @@ angular.module('starter.controllers', [])
 
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 
+    
 
 })
 
 .controller('AmmoCtrl', function ($scope, ammoTypes, modifiersService, tablessStateService) {
 
     tablessStateService.enable($scope);
+    $scope.goBack = tablessStateService.goBack;
 
     $scope.ammoTypes = ammoTypes.all();
 
@@ -140,6 +141,7 @@ angular.module('starter.controllers', [])
 .controller('ShotgunChokeCtrl', function ($scope, choke, modifiersService, tablessStateService) {
 
     tablessStateService.enable($scope);
+    $scope.goBack = tablessStateService.goBack;
 
     $scope.choke = choke.all();
 

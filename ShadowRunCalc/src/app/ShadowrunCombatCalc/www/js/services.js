@@ -2,12 +2,12 @@ angular.module('starter.services', [])
 
 
 .factory('modifiersService', ['attackerSituations', 'firingModes', 'choke', 'defenderSituations', 'coverService',
-                                'equipment', 'ammoTypes', 
+                                'equipmentService', 'ammoTypes', 
                                 'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
                                 'attackTypeService', 
                                 '$filter', '$ionicPopup',
                                 function (attackerSituations, firingModes, choke, defenderSituations, coverService,
-                                            equipment, ammoTypes,
+                                            equipmentService, ammoTypes,
                                             visibilityModifiers, lightModifiers, windModifiers, rangeModifiers,
                                             attackTypeService,
                                             $filter, $ionicPopup) {
@@ -22,7 +22,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(choke.all(), function (value, key) {modifiers.push(value);});
 
-                angular.forEach(equipment.all(), function (value, key) {modifiers.push(value);});
+                angular.forEach(equipmentService.all(), function (value, key) { modifiers.push(value); });
 
                 angular.forEach(ammoTypes.all(), function (value, key) {modifiers.push(value);});
 
@@ -219,20 +219,20 @@ angular.module('starter.services', [])
                 }
 
                 var stats = [];
-                
-                if (item.attackerPool != 0) {
+
+                if (item.attackerPool && item.attackerPool != 0) {
                     stats.push('Att: ' + (item.attackerPool>=0?'+':'') + item.attackerPool);
                 }
 
-                if (item.defenderPool != 0) {
+                if (item.defenderPool && item.defenderPool != 0) {
                     stats.push('Def: ' + (item.defenderPool >= 0 ? '+' : '') + item.defenderPool);
                 }
 
-                if (item.dv != 0) {
+                if (item.dv && item.dv != 0) {
                     stats.push('DV: ' + (item.dv >= 0 ? '+' : '') + item.dv);
                 }
 
-                if (item.ap != 0) {
+                if (item.ap && item.ap != 0) {
                     stats.push('AP: ' + (item.ap >= 0 ? '+' : '') + item.ap);
                 }
 
@@ -287,24 +287,23 @@ angular.module('starter.services', [])
 
     return { 
         
+        goBack: function() {
+                $state.go($rootScope.lastTabsState);
+            },
+        
         enable: function ($scope) {
             
             $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
                 viewData.enableBack = true;
             });
-
-            //override back button behavior
-            var customBack = function() {
-                $state.go($rootScope.lastTabsState);
-            }
-
+            
             //nav back
             var oldSoftBack = $rootScope.$ionicGoBack;
             var deregisterSoftBack = function() { $rootScope.$ionicGoBack = oldSoftBack; };
-            $rootScope.$ionicGoBack = customBack;
+            $rootScope.$ionicGoBack = this.goBack;
     
             //andorid back button
-            var deregisterHardBack = $ionicPlatform.registerBackButtonAction(customBack, 101);
+            var deregisterHardBack = $ionicPlatform.registerBackButtonAction(this.goBack, 101);
 
             //restore default behaviour for other controllers
             $scope.$on('destroy', function() {
@@ -315,8 +314,17 @@ angular.module('starter.services', [])
         },
 
         showTablessView: function (newState) {
+
             $rootScope.lastTabsState = $ionicHistory.currentView().stateId;
-            $state.go(newState);
+
+            if (newState != null) {
+                console.log('Goin to: ' + newState);
+                $state.go(newState);
+            } else {
+                console.log('Unknown state!');
+                $state.go('');
+            }
+            
         }
     };
 }])
@@ -453,18 +461,19 @@ angular.module('starter.services', [])
 .factory('ammoTypes', function () {
 
     var options = [
-            { id: 1, name: 'APDS', ap: -4, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 2, name: 'Explosive', ap: -1, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 3, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 4, name: 'Gel', ap: 1, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 5, name: 'Hollow Point', ap: 2, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 6, name: 'Stick-n-Shock', ap: -5, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 7, name: 'EX-Explosive', ap: -1, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 8, name: 'Frangible', ap: 4, dv: -1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 9, name: 'Flare @ <60m', ap: 2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 10, name: 'Flare @ 60m-62m', ap: -3, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 11, name: 'Tracker', ap: -2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 12, name: 'Capsule', ap: 4, dv: -4, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true }
+            { id: 3, name: 'Regular Ammo', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 3, name: 'APDS', ap: -4, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 4, name: 'Explosive', ap: -1, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 5, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 6, name: 'Gel', ap: 1, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 7, name: 'Hollow Point', ap: 2, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 8, name: 'Stick-n-Shock', ap: -5, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 9, name: 'EX-Explosive', ap: -1, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 10, name: 'Frangible', ap: 4, dv: -1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 11, name: 'Flare @ <60m', ap: 2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 12, name: 'Flare @ 60m-62m', ap: -3, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 13, name: 'Tracker', ap: -2, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 14, name: 'Capsule', ap: 4, dv: -4, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true }
         ];
 
     return {
@@ -485,7 +494,7 @@ angular.module('starter.services', [])
 })
 
 
-.factory('equipment', function () {
+.factory('equipmentService', function () {
 
     var options = [
             { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },

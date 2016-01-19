@@ -9,17 +9,16 @@
                 {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
                 </label>
             </ion-item>
-        </ion-list><p>&nbsp;</p>
-
+        </ion-list>
+        <p>&nbsp;</p>
         <!-- Since we know firing mode and choke only apply to ranged, don't even render their headers for non ranged attacks -->
         <div ng-if="attackType.name==rangedAttackType">
-
             <h3>Firing Mode</h3>            
             <ion-list>
                 <ion-item class="row-no-padding" ng-click="showTablessView('app.firingMode'); $event.stopPropagation();">
                     <label class=" checkbox">
-                        <input type="checkbox" ng-model="firingMode.checked">
-                        {{firingMode!=null?firingMode.name:'None'}} <small>{{formatStats(firingMode, '(', ')', ', ')}}</small>
+                        <input type="checkbox" onclick="return false;" ng-checked="firingMode.checked">
+                        {{firingMode.name}} <small>{{formatStats(firingMode, '(', ')', ', ')}}</small>
                     </label>
                 </ion-item>
             </ion-list>
@@ -28,8 +27,8 @@
           <ion-list  >
               <ion-item class="row-no-padding" ng-click="showTablessView('app.ammo'); $event.stopPropagation();">
                   <label class="checkbox">
-                      <input type="checkbox" ng-model="ammo.checked">
-                      {{ammo!=null?ammo.name:'None'}} <small>{{formatStats(ammo, '(', ')', ', ')}}</small>
+                      <input type="checkbox" onclick="return false;" ng-checked="ammo.checked">
+                        {{ammo.name}} <small>{{formatStats(ammo, '(', ')', ', ')}}</small>
                   </label>
               </ion-item>
           </ion-list>
@@ -38,8 +37,8 @@
             <ion-list>
                 <ion-item class="row-no-padding" ng-click="showTablessView('app.shotgunChoke'); $event.stopPropagation();">
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="choke.checked">
-                        {{choke!=null?choke.name:'None'}} <small>{{formatStats(choke, '(', ')', ', ')}}</small>
+                        <input type="checkbox" onclick="return false;" ng-checked="choke.checked">
+                        {{choke.name}} <small>{{formatStats(choke, '(', ')', ', ')}}</small>
                     </label>
                 </ion-item>
             </ion-list>
