@@ -5,3 +5,8 @@
   vertical-align: middle;
 }
 
+.row-no-border
+{
+  border: 0px;
+
+}

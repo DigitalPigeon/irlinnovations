@@ -3,7 +3,7 @@
         
         <h3>Defender's Situation</h3>
         <ion-list>
-            <ion-item ng-repeat="item in defenderSituations" class="row-no-padding" ng-if="isModifierApplicable(item)">
+            <ion-item ng-repeat="item in defenderSituations" class="row-no-padding" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation();">
                 <label class="checkbox">
                     <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
                     {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
@@ -13,7 +13,7 @@
         
         <h3>Cover</h3>
         <ion-list>
-            <ion-item ng-repeat="item in cover" class="row-no-padding" ng-if="isModifierApplicable(item)">
+            <ion-item ng-repeat="item in cover" class="row-no-padding" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation();">
                 <label class="checkbox">
                     <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
                     {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>

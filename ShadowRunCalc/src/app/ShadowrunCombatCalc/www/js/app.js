@@ -23,7 +23,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+    
+.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+
+    //configure tab position
+    $ionicConfigProvider.tabs.position('top'); // other values: top
+
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -32,11 +37,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     $stateProvider
 
     .state('app', {
-            url: '/app',
-            abstract: true,
-            templateUrl: 'templates/menu.html',
-            controller: 'AppCtrl'
-        })
+        url: '/app',
+        abstract: true,
+        templateUrl: 'templates/menu.html',
+        controller: 'AppCtrl'
+    })
 
 
     // setup an abstract state for the tabs directive
@@ -45,12 +50,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           views:
               {
                   'menuContent': { templateUrl: 'templates/tabs.html' }
-                  }
-          
+              }
+
       })
 
     // Each tab has its own nav history stack:
-    
+
     .state('app.tab.attack', {
         url: '/attack',
         views: {
@@ -72,6 +77,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
+  .state('app.tab.result', {
+      url: '/result',
+      views: {
+          'tab-result': {
+              templateUrl: 'templates/tab-result.html',
+              controller: 'ResultCtrl'
+          }
+      }
+  })
+
       .state('app.gear', {
           url: '/gear',
           views: {
@@ -91,15 +106,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             }
         }
     })
-      .state('app.tab.result', {
-          url: '/result',
-          views: {
-              'tab-result': {
-                  templateUrl: 'templates/tab-result.html',
-                  controller: 'ResultCtrl'
-              }
-          }
-      });
+
+    .state('app.firingMode', {
+        url: '/firingMode',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/firingMode.html',
+                controller: 'FiringModeCtrl'
+            }
+        }
+    })
+
+    ;
   
 
   // if none of the above states are matched, use this as the fallback

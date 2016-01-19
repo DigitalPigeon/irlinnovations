@@ -3,10 +3,10 @@
         
         <h3>Attacker's Situation</h3>
         <ion-list>
-            <ion-item ng-repeat="item in attackerSituations" class="row-no-padding" ng-if="isModifierApplicable(item)">
-                <label class="checkbox">
-                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
-                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+            <ion-item ng-repeat="item in attackerSituations" class="row-no-padding" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation();" >
+                <label class=" checkbox">
+                <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
+                {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
                 </label>
             </ion-item>
         </ion-list><p>&nbsp;</p>
@@ -14,29 +14,29 @@
         <!-- Since we know firing mode and choke only apply to ranged, don't even render their headers for non ranged attacks -->
         <div ng-if="attackType.name==rangedAttackType">
 
-            <h3>Firing Mode</h3>
+            <h3>Firing Mode</h3>            
             <ion-list>
-                <ion-item ng-repeat="item in firingModes" class="row-no-padding">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
-                        {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                <ion-item class="row-no-padding" ng-click="showTablessView('app.firingMode'); $event.stopPropagation();">
+                    <label class=" checkbox">
+                        <input type="checkbox" ng-click="" ng-model="firingMode.checked">
+                        {{firingMode!=null?firingMode.name:'None'}} <small>{{formatStats(firingMode, '(', ')', ', ')}}</small>
                     </label>
                 </ion-item>
             </ion-list>
             
             <h3>Ammunition</h3>
           <ion-list  >
-              <ion-item ng-repeat="item in ammoTypes" class="row-no-padding">
+              <ion-item ng-repeat="item in ammoTypes" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
                   <label class="checkbox">
-                    <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked" >
-                    {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
-                </label>              
+                      <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
+                      {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+                  </label>
               </ion-item>
           </ion-list>
 
             <h3>Shotgun Choke</h3>
             <ion-list>
-                <ion-item ng-repeat="item in choke" class="row-no-padding">
+                <ion-item ng-repeat="item in choke" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
                     <label class="checkbox">
                         <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
                         {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>

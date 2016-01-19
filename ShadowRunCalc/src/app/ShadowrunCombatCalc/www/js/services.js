@@ -164,12 +164,18 @@ angular.module('starter.services', [])
             },
 
 
-            validateSelection: function (currentSelection) {
+            validateSelection: function (currentSelection, toggleCurrentSelection) {
                 
                 var allSelected = this.selected();
                 var all = this.all();
                 
                 var filteredResults;
+
+                //if toggle current selection, then we need to change this items checked state
+                if (toggleCurrentSelection)
+                {
+                    currentSelection.checked = !currentSelection.checked;
+                }
 
                
                 //max one cover
@@ -206,6 +212,12 @@ angular.module('starter.services', [])
             },
 
             formatStats: function (item, prefix, suffix, seperator) {
+
+                if (item == null)
+                {
+                    return;
+                }
+
                 var stats = [];
                 
                 if (item.attackerPool != 0) {
@@ -302,8 +314,9 @@ angular.module('starter.services', [])
 
         },
 
-        trackLastTabState: function () {
+        showTablessView: function (newState) {
             $rootScope.lastTabsState = $ionicHistory.currentView().stateId;
+            $state.go(newState);
         }
     };
 }])
@@ -355,7 +368,17 @@ angular.module('starter.services', [])
 
     return {
         all: function () {
-            return options;
+            return options;    
+        },
+
+        selected: function () {
+            var firingMode = null;                    
+            angular.forEach(this.all(), function (value, item) {
+                if (value.checked) {                    
+                    firingMode =  value;
+                }
+            });
+            return firingMode;
         }
     };
 })

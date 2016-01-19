@@ -1,9 +1,9 @@
-<ion-view view-title="Gear">
+<ion-view view-title="Firing Modes">
   <ion-content >
       
-      <h3>Equipment</h3>
+      <h3>Firing Mode</h3>
       <ion-list  >
-          <ion-item ng-repeat="item in equipment" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
+          <ion-item ng-repeat="item in firingModes" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
               <label class="checkbox">
                   <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
                   {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>

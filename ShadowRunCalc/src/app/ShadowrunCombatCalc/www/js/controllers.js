@@ -10,7 +10,7 @@ angular.module('starter.controllers', [])
         attackTypeService.changeAttackType(newAttackType);
     };
 
-    $scope.recordActiveTab = tablessStateService.trackLastTabState;
+    $scope.showTablessView = tablessStateService.showTablessView;
 })
 
 .controller('AttackCtrl', function ($scope, attackerSituations, firingModes, choke, ammoTypes, defenderSituations,
@@ -20,23 +20,25 @@ angular.module('starter.controllers', [])
     // To listen for when this page is active (for example, to refresh data),
     // listen for the $ionicView.enter event:
     //
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
+    
+    $scope.$on('$ionicView.enter', function (e) {
+        $scope.firingMode = firingModes.selected();
+        console.log('Mode:' + $scope.firingMode.name);
+    });
     
     $scope.attackType = attackTypeService.attackType;
 
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
     $scope.meleeAttackType = attackTypeService.meleeAttackType;
 
-    $scope.attackerSituations = attackerSituations.all();
-    $scope.firingModes = firingModes.all();
+    $scope.attackerSituations = attackerSituations.all();    
     $scope.choke = choke.all();
     $scope.ammoTypes = ammoTypes.all();
 
     $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
     $scope.formatStats = modifiersService.formatStats;
 
-    $scope.validateSelection = function (currentSelection) { modifiersService.validateSelection(currentSelection); }
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 
     //watch for change to attack type, if it occurs scroll to the top
     //this is important because melee is smaller than ranged, and can actually be scrolled
@@ -55,34 +57,7 @@ angular.module('starter.controllers', [])
     $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
     $scope.formatStats = modifiersService.formatStats;
 
-    $scope.validateSelection = function (currentSelection) { modifiersService.validateSelection(currentSelection); }
-})
-
-.controller('GearCtrl', function ($scope, equipment, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
-
-    $scope.equipment = equipment.all();
-
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection) { modifiersService.validateSelection(currentSelection); }
-})
-
-.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
-    
-    $scope.visibilityModifiers = visibilityModifiers.all();
-    $scope.lightModifiers = lightModifiers.all();
-    $scope.windModifiers = windModifiers.all();
-    $scope.rangeModifiers = rangeModifiers.all();
-
-    $scope.formatStats = modifiersService.formatStats;
-    
-    $scope.validateSelection = function (currentSelection) { modifiersService.validateSelection(currentSelection); }
-
-    
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 })
 
 .controller('ResultCtrl', function ($scope, $stateParams, modifiersService, attackTypeService) {
@@ -104,4 +79,49 @@ angular.module('starter.controllers', [])
     $scope.attackType = attackTypeService.attackType;
 
     $scope.$watch('attackType.name', rebind);
-});
+})
+
+
+
+.controller('GearCtrl', function ($scope, equipment, modifiersService, tablessStateService) {
+
+    tablessStateService.enable($scope);
+
+    $scope.equipment = equipment.all();
+
+    $scope.formatStats = modifiersService.formatStats;
+
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+})
+
+.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService, tablessStateService) {
+
+    tablessStateService.enable($scope);
+
+    $scope.visibilityModifiers = visibilityModifiers.all();
+    $scope.lightModifiers = lightModifiers.all();
+    $scope.windModifiers = windModifiers.all();
+    $scope.rangeModifiers = rangeModifiers.all();
+
+    $scope.formatStats = modifiersService.formatStats;
+
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+
+
+})
+
+
+.controller('FiringModeCtrl', function ($scope, firingModes, modifiersService, tablessStateService) {
+
+    tablessStateService.enable($scope);
+
+    $scope.firingModes = firingModes.all();
+
+    $scope.formatStats = modifiersService.formatStats;
+
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+
+
+})
+
+;
