@@ -117,6 +117,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
     })
 
+    .state('app.ammo', {
+        url: '/ammo',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/ammo.html',
+                controller: 'AmmoCtrl'
+            }
+        }
+    })
+
+    .state('app.shotgunChoke', {
+        url: '/shotgunChoke',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/shotgunChoke.html',
+                controller: 'ShotgunChokeCtrl'
+            }
+        }
+    })
+
     ;
   
 

@@ -23,7 +23,8 @@ angular.module('starter.controllers', [])
     
     $scope.$on('$ionicView.enter', function (e) {
         $scope.firingMode = firingModes.selected();
-        console.log('Mode:' + $scope.firingMode.name);
+        $scope.ammo = ammoTypes.selected();
+        $scope.choke = choke.selected();
     });
     
     $scope.attackType = attackTypeService.attackType;
@@ -31,9 +32,7 @@ angular.module('starter.controllers', [])
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
     $scope.meleeAttackType = attackTypeService.meleeAttackType;
 
-    $scope.attackerSituations = attackerSituations.all();    
-    $scope.choke = choke.all();
-    $scope.ammoTypes = ammoTypes.all();
+    $scope.attackerSituations = attackerSituations.all();        
 
     $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
     $scope.formatStats = modifiersService.formatStats;
@@ -116,6 +115,33 @@ angular.module('starter.controllers', [])
     tablessStateService.enable($scope);
 
     $scope.firingModes = firingModes.all();
+
+    $scope.formatStats = modifiersService.formatStats;
+
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+
+
+})
+
+.controller('AmmoCtrl', function ($scope, ammoTypes, modifiersService, tablessStateService) {
+
+    tablessStateService.enable($scope);
+
+    $scope.ammoTypes = ammoTypes.all();
+
+    $scope.formatStats = modifiersService.formatStats;
+
+    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+
+
+})
+
+
+.controller('ShotgunChokeCtrl', function ($scope, choke, modifiersService, tablessStateService) {
+
+    tablessStateService.enable($scope);
+
+    $scope.choke = choke.all();
 
     $scope.formatStats = modifiersService.formatStats;
 

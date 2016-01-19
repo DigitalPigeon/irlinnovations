@@ -1,8 +1,8 @@
-<ion-view view-title="Firing Modes">
+<ion-view view-title="Shotgun Choke">
   <ion-content >
       
       <ion-list  >
-          <ion-item ng-repeat="item in firingModes" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
+          <ion-item ng-repeat="item in choke" class="row-no-padding" ng-click="validateSelection(item, true); $event.stopPropagation();">
               <label class="checkbox">
                   <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation();" ng-model="item.checked">
                   {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>

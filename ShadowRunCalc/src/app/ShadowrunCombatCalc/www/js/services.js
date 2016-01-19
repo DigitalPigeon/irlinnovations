@@ -372,13 +372,13 @@ angular.module('starter.services', [])
         },
 
         selected: function () {
-            var firingMode = null;                    
+            var selectedItem = null;                    
             angular.forEach(this.all(), function (value, item) {
                 if (value.checked) {                    
-                    firingMode =  value;
+                    selectedItem = value;
                 }
             });
-            return firingMode;
+            return selectedItem;
         }
     };
 })
@@ -401,6 +401,16 @@ angular.module('starter.services', [])
     return {
         all: function () {
             return options;
+        },
+
+        selected: function () {
+            var selectedItem = null;
+            angular.forEach(this.all(), function (value, item) {
+                if (value.checked) {
+                    selectedItem = value;
+                }
+            });
+            return selectedItem;
         }
     };
 })
@@ -460,7 +470,17 @@ angular.module('starter.services', [])
     return {
         all: function () {
             return options;
-        }
+        },
+
+        selected: function () {
+        var selectedItem = null;                    
+        angular.forEach(this.all(), function (value, item) {
+            if (value.checked) {                    
+                selectedItem = value;
+            }
+        });
+        return selectedItem;
+    }
     };
 })
 
