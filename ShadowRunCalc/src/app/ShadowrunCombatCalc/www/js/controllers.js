@@ -1,23 +1,23 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function ($rootScope, $scope, $ionicHistory, attackTypeService, tablessStateService) {
+
+    //all attack type services for binding
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
     $scope.meleeAttackType = attackTypeService.meleeAttackType;
-
     $scope.attackType = attackTypeService.attackType;
+    $scope.isRangedAttack = function () { return attackTypeService.isRangedAttack() };
 
     $scope.changeAttackType = function (newAttackType) {
         attackTypeService.changeAttackType(newAttackType);
     };
 
     $scope.showTablessView = tablessStateService.showTablessView;
+    $scope.enableTablessView = tablessStateService.enable;
 })
 
-.controller('AttackCtrl', function ($scope, attackTypeService, $ionicScrollDelegate) {
+.controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {
         
-    $scope.attackType = attackTypeService.attackType;
-    $scope.isRangedAttack = attackTypeService.isRangedAttack;    
-    
     //watch for change to attack type, if it occurs scroll to the top
     //this is important because melee is smaller than ranged, and can actually be scrolled
     //off of the viewable area
@@ -29,24 +29,19 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('TargetCtrl', function ($scope, defenderSituations, modifiersService, attackTypeService, coverService) {
-    $scope.defenderSituations = defenderSituations.all();
-    $scope.cover = coverService.all();
-
-    $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+.controller('TargetCtrl', function () {    
 })
 
 .controller('ResultCtrl', function ($scope, $stateParams, modifiersService, attackTypeService) {
 
     var rebind = function() {
-        $scope.selectedModifiers = modifiersService.selected();
+        //$scope.selectedModifiers = modifiersService.selected();
+
         $scope.selectedAttackerPoolModifiers = modifiersService.affectsAttackerPool();
         $scope.selectedDvModifiers = modifiersService.affectsDv();
         $scope.selectedApModifiers = modifiersService.affectsAp();
         $scope.selectedDefenderPoolModifiers = modifiersService.affectsDefenderPool();
+
         $scope.attackerPoolTotal = modifiersService.attackerPoolTotal();
         $scope.dvTotal = modifiersService.dvTotal();
         $scope.apTotal = modifiersService.apTotal();
@@ -54,45 +49,27 @@ angular.module('starter.controllers', [])
     };
     
     $scope.$on('$ionicView.enter', rebind);
-
-    $scope.attackType = attackTypeService.attackType;
-
     $scope.$watch('attackType.name', rebind);
+
+    //$scope.attackType = attackTypeService.attackType;
+
+    
 })
 
 
 
-.controller('MyCharacterCtrl', function ($scope, equipmentService, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
-
-    $scope.equipment = equipmentService.all();
-
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+.controller('MyCharacterCtrl', function ($scope) {
+    $scope.enableTablessView($scope);    
 })
 
 
-.controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService) {
-
-    $scope.visibilityModifiers = visibilityModifiers.all();
-    $scope.lightModifiers = lightModifiers.all();
-    $scope.windModifiers = windModifiers.all();
-    $scope.rangeModifiers = rangeModifiers.all();
-
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
-
-
+.controller('EnvironmentCtrl', function () {
 })
 
 
-.controller('PopoutCtrl', function ($scope, $stateParams, tablessStateService) {
+.controller('PopoutCtrl', function ($scope, $stateParams) {
 
-    tablessStateService.enable($scope);
-
+    $scope.enableTablessView($scope);
     $scope.name = $stateParams.name;
     $scope.itemServiceName = $stateParams.itemServiceName;
 
@@ -104,21 +81,17 @@ angular.module('starter.controllers', [])
 
     //all services have an all() method.
     $scope.items = itemService.all();
-    
-    var monitor = function() {
-        console.log('monitor was called');
-        return itemService.selected();
-    }
-
+        
     //only single selectable services have the selected() method, so check for it safely
+    //the call to itemService.selected() needs to be wrapped in a local function for scope adherance
     if (itemService.selected) {
         $scope.$watch(function () { return itemService.selected(); }, function (newItem, oldItem) {                       
             $scope.item = newItem || { name: 'None Selected', checked: false };
         });
     }    
     
-    $scope.goBackIfRequired = function () {        
-        //if name was not supplied, assume we are in a "modal" mode
+    //if a section name is supplied, assume this is shown inline. if there is no name, then assume we are modal
+    $scope.goBackIfRequired = function () {                
         if (!$scope.name) {
             tablessStateService.goBack();
         }

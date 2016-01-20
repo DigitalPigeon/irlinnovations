@@ -1,0 +1,16 @@
+<ion-view view-title="{{attackType.name}} Environment">
+    
+    <ion-content class="padding">
+        
+        <modifier-block name="Visibility" item-service-name="visibilityModifiers"></modifier-block>
+
+        <modifier-block name="Light &amp; Glare" item-service-name="lightModifiers"></modifier-block>
+
+        <modifier-block name="Wind" item-service-name="windModifiers" ng-if="isRangedAttack()"></modifier-block>
+
+        <modifier-block name="Range" item-service-name="rangeModifiers" ng-if="isRangedAttack()"></modifier-block>                    
+              
+      
+
+    </ion-content>
+</ion-view>

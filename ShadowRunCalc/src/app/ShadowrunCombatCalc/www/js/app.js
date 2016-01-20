@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directives'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.data', 'starter.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -29,13 +29,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     //configure tab position
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
+    //routes  
     $stateProvider
-
+    
+    //slide out menu
     .state('app', {
         url: '/app',
         abstract: true,
@@ -44,69 +41,76 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 
 
-    // setup an abstract state for the tabs directive
+    //tab layout
       .state('app.tab', {
           url: '/tab',
           views:
               {
-                  'menuContent': { templateUrl: 'templates/tabs.html' }
+                  'menuContent': { templateUrl: 'templates/tabs/tabs.html' }
               }
 
       })
 
-    // Each tab has its own nav history stack:
-
+    //tab - attack
     .state('app.tab.attack', {
         url: '/attack',
         views: {
             'tab-attack': {
-                templateUrl: 'templates/tab-attack.html',
+                templateUrl: 'templates/tabs/tab-attack.html',
                 controller: 'AttackCtrl'
             }
         }
     })
 
-
+    //tab - target
     .state('app.tab.target', {
         url: '/target',
         views: {
             'tab-target': {
-                templateUrl: 'templates/tab-target.html',
+                templateUrl: 'templates/tabs/tab-target.html',
                 controller: 'TargetCtrl'
             }
         }
     })
 
+    //tab environment
     .state('app.tab.environment', {
         url: '/environment',
         views: {
             'tab-environment': {
-                templateUrl: 'templates/tab-environment.html',
+                templateUrl: 'templates/tabs/tab-environment.html',
                 controller: 'EnvironmentCtrl'
             }
         }
     })
 
+   //tab result
   .state('app.tab.result', {
       url: '/result',
       views: {
           'tab-result': {
-              templateUrl: 'templates/tab-result.html',
+              templateUrl: 'templates/tabs/tab-result.html',
               controller: 'ResultCtrl'
           }
       }
   })
+        
+    //stand alone pages
 
+    //character
       .state('app.myCharacter', {
           url: '/myCharacter',
           views: {
               'menuContent': {
-                  templateUrl: 'templates/myCharacter.html',
+                  templateUrl: 'templates/standalone/myCharacter.html',
                   controller: 'MyCharacterCtrl'
               }
           }
       })
+    
+    //reusable template pages
 
+    //popout editor
     .state('app.popout', {
         url: '/popout/:name/:itemServiceName',
         views: {
@@ -116,8 +120,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             }
         }
     }) 
-
-    
+      
 
     ;
   
