@@ -261,6 +261,10 @@ angular.module('starter.services', [])
         
         attackType: attackType,
         
+        isRangedAttack: function () { return attackType.name == rangedAttackType; },
+
+        isMeleeAttack: function () { return attackType.name == meleeAttackType; },
+
         changeAttackType: function (newAttackType) {
             attackType.name = newAttackType;
             return attackType;

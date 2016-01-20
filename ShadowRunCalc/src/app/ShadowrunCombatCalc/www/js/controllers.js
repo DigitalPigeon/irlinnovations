@@ -13,42 +13,21 @@ angular.module('starter.controllers', [])
     $scope.showTablessView = tablessStateService.showTablessView;
 })
 
-.controller('AttackCtrl', function ($scope, attackerSituations, firingModes, choke, ammoTypes, defenderSituations,
-                                    modifiersService, attackTypeService, $ionicScrollDelegate) {
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //
-
-    $scope.$on('$ionicView.enter', function (e) {
-        $scope.firingMode = firingModes.selected() || {name: 'No Firing Mode Selected', checked:false};
-        $scope.ammo = ammoTypes.selected() || { name: 'No Ammo Selected', checked: false };
-        $scope.choke = choke.selected() || { name: 'No Choke Selected', checked: false };
-    });
-
-    
+.controller('AttackCtrl', function ($scope, attackTypeService, $ionicScrollDelegate) {
+        
     $scope.attackType = attackTypeService.attackType;
-
-    $scope.rangedAttackType = attackTypeService.rangedAttackType;
-    $scope.meleeAttackType = attackTypeService.meleeAttackType;
-
-    $scope.attackerSituations = attackerSituations.all();        
-
-    $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
-
+    $scope.isRangedAttack = attackTypeService.isRangedAttack;    
+    
     //watch for change to attack type, if it occurs scroll to the top
     //this is important because melee is smaller than ranged, and can actually be scrolled
     //off of the viewable area
-    $scope.$watch('attackType.name', function () {
+    $scope.$watch('attackType.name', function (newValue, oldValue) {
         // Set true for animation which isn't needed in my case
-        $ionicScrollDelegate.scrollTop(false);
+        if (newValue != oldValue) {
+            $ionicScrollDelegate.scrollTop(false);
+        }        
     });
-
-    })
+})
 
 .controller('TargetCtrl', function ($scope, defenderSituations, modifiersService, attackTypeService, coverService) {
     $scope.defenderSituations = defenderSituations.all();
@@ -110,19 +89,13 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('PopoutCtrl', function ($scope, $stateParams, $injector, modifiersService, tablessStateService, attackTypeService) {
+.controller('PopoutCtrl', function ($scope, $stateParams, tablessStateService) {
 
     tablessStateService.enable($scope);
 
     $scope.name = $stateParams.name;
     $scope.itemServiceName = $stateParams.itemServiceName;
-    
-    $scope.goBackIfRequired = function() {
-        if ($scope.name == '') {
-            tablessStateService.goBack();
-        }
-    };
-    
+
 })
 
 .controller('ModifierBlockCtrl', function ($scope, $injector, modifiersService, tablessStateService, attackTypeService) {
@@ -133,31 +106,18 @@ angular.module('starter.controllers', [])
     $scope.items = itemService.all();
     
     var monitor = function() {
+        console.log('monitor was called');
         return itemService.selected();
     }
 
     //only single selectable services have the selected() method, so check for it safely
     if (itemService.selected) {
-        $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
-        $scope.$on('$ionicView.enter', function (e) {
-            console.log('enter sub view');
-            $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
+        $scope.$watch(function () { return itemService.selected(); }, function (newItem, oldItem) {                       
+            $scope.item = newItem || { name: 'None Selected', checked: false };
         });
-
-        $scope.$watch('monitor()', function () {
-            // Set true for animation which isn't needed in my case
-            console.log('watch triggered');
-            console.log(itemService.selected());
-            $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
-        });
-        
-
-    }
-
+    }    
     
-    
-    $scope.goBackIfRequired = function () {
-        
+    $scope.goBackIfRequired = function () {        
         //if name was not supplied, assume we are in a "modal" mode
         if (!$scope.name) {
             tablessStateService.goBack();
@@ -168,8 +128,6 @@ angular.module('starter.controllers', [])
     $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
     $scope.formatStats = modifiersService.formatStats;
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
-
-
 
 })
 
