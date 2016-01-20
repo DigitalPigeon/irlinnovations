@@ -20,12 +20,13 @@ angular.module('starter.controllers', [])
     // To listen for when this page is active (for example, to refresh data),
     // listen for the $ionicView.enter event:
     //
-    
+
     $scope.$on('$ionicView.enter', function (e) {
         $scope.firingMode = firingModes.selected() || {name: 'No Firing Mode Selected', checked:false};
         $scope.ammo = ammoTypes.selected() || { name: 'No Ammo Selected', checked: false };
         $scope.choke = choke.selected() || { name: 'No Choke Selected', checked: false };
     });
+
     
     $scope.attackType = attackTypeService.attackType;
 
@@ -93,6 +94,7 @@ angular.module('starter.controllers', [])
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 })
 
+
 .controller('EnvironmentCtrl', function ($scope, visibilityModifiers, lightModifiers, windModifiers, rangeModifiers, modifiersService) {
 
     $scope.visibilityModifiers = visibilityModifiers.all();
@@ -108,48 +110,69 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('FiringModeCtrl', function ($scope, firingModes, modifiersService, tablessStateService) {
+.controller('PopoutCtrl', function ($scope, $stateParams, $injector, modifiersService, tablessStateService, attackTypeService) {
 
     tablessStateService.enable($scope);
-    $scope.goBack = tablessStateService.goBack;
 
-    $scope.firingModes = firingModes.all();
+    $scope.name = $stateParams.name;
+    $scope.itemServiceName = $stateParams.itemServiceName;
+    
+    $scope.goBackIfRequired = function() {
+        if ($scope.name == '') {
+            tablessStateService.goBack();
+        }
+    };
+    
+})
 
-    $scope.formatStats = modifiersService.formatStats;
+.controller('ModifierBlockCtrl', function ($scope, $injector, modifiersService, tablessStateService, attackTypeService) {
 
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
+    var itemService = $injector.get($scope.itemServiceName);
+
+    //all services have an all() method.
+    $scope.items = itemService.all();
+    
+    var monitor = function() {
+        return itemService.selected();
+    }
+
+    //only single selectable services have the selected() method, so check for it safely
+    if (itemService.selected) {
+        $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
+        $scope.$on('$ionicView.enter', function (e) {
+            console.log('enter sub view');
+            $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
+        });
+
+        $scope.$watch('monitor()', function () {
+            // Set true for animation which isn't needed in my case
+            console.log('watch triggered');
+            console.log(itemService.selected());
+            $scope.item = itemService.selected() || { name: 'None Selected', checked: false };
+        });
+        
+
+    }
 
     
+    
+    $scope.goBackIfRequired = function () {
+        
+        //if name was not supplied, assume we are in a "modal" mode
+        if (!$scope.name) {
+            tablessStateService.goBack();
+        }
+    };
 
-})
-
-.controller('AmmoCtrl', function ($scope, ammoTypes, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
-    $scope.goBack = tablessStateService.goBack;
-
-    $scope.ammoTypes = ammoTypes.all();
-
+    $scope.showTablessView = tablessStateService.showTablessView;
+    $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
     $scope.formatStats = modifiersService.formatStats;
-
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 
 
-})
-
-
-.controller('ShotgunChokeCtrl', function ($scope, choke, modifiersService, tablessStateService) {
-
-    tablessStateService.enable($scope);
-    $scope.goBack = tablessStateService.goBack;
-
-    $scope.choke = choke.all();
-
-    $scope.formatStats = modifiersService.formatStats;
-
-    $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
-
 
 })
+
+
 
 ;

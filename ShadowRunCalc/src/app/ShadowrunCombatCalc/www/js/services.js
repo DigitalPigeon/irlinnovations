@@ -313,15 +313,14 @@ angular.module('starter.services', [])
 
         },
 
-        showTablessView: function (newState) {
-
+        showTablessView: function (newState, routingParameters) {
+            
             $rootScope.lastTabsState = $ionicHistory.currentView().stateId;
-
-            if (newState != null) {
-                console.log('Goin to: ' + newState);
-                $state.go(newState);
+            
+            if (newState) {
+                $state.go(newState, routingParameters);
             } else {
-                console.log('Unknown state!');
+                console.log('New state was not specified!');
                 $state.go('');
             }
             

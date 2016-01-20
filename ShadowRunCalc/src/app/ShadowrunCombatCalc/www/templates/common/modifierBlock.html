@@ -1,0 +1,9 @@
+<h3 ng-if="name!=''">{{name}}</h3>
+<ion-list>
+    <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
+        <label class=" checkbox">
+            <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked" data-ui-sref-opts="{reload: true}">
+            {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+        </label>
+    </ion-item>
+</ion-list>

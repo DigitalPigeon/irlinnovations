@@ -10,3 +10,10 @@
   border: 0px;
 
 }
+
+.row-no-side-border
+{
+    border-left: 0px;
+    border-right: 0px;
+
+}

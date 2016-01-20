@@ -1,0 +1,11 @@
+<h3>{{name}}</h3>
+<ion-list ng-if="item!=null">
+    <ion-item class="row-no-padding" ng-click="showTablessView('app.popout', {name: name, itemServiceName: itemServiceName}); $event.stopPropagation();">
+        <label class=" checkbox">
+            <input type="checkbox" onclick="return false;" ng-checked="item.checked">
+            {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+        </label>
+    </ion-item>
+</ion-list>
+
+
