@@ -5,12 +5,12 @@ angular.module('starter.services', [])
                                 'equipmentService', 'ammoTypes', 
                                 'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
                                 'attackTypeService', 
-                                '$filter', '$ionicPopup',
+                                '$filter', '$ionicPopup', '$state',
                                 function (attackerSituations, firingModes, choke, defenderSituations, coverService,
                                             equipmentService, ammoTypes,
                                             visibilityModifiers, lightModifiers, windModifiers, rangeModifiers,
                                             attackTypeService,
-                                            $filter, $ionicPopup) {
+                                            $filter, $ionicPopup, $state) {
         return {
             all: function() {
 
@@ -39,6 +39,14 @@ angular.module('starter.services', [])
                 angular.forEach(rangeModifiers.all(), function (value, key) {modifiers.push(value);});
 
                 return modifiers;
+            },
+
+            reset: function () {
+                angular.forEach(this.all(), function (value, key) {
+                    value.checked = false;
+                    attackTypeService.changeAttackType(attackTypeService.rangedAttackType);
+                    $state.go('app.tab.attack');
+                });
             },
 
             selected: function() {

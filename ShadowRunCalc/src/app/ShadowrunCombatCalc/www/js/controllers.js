@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, $ionicHistory, attackTypeService, tablessStateService) {
+.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, tablessStateService) {
 
     //all attack type services for binding
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
@@ -14,6 +14,21 @@ angular.module('starter.controllers', [])
 
     $scope.showTablessView = tablessStateService.showTablessView;
     $scope.enableTablessView = tablessStateService.enable;
+
+    $scope.goHome = function () { $state.go('app.tab.attack'); }
+
+    $scope.reset = function () {
+
+        $ionicPopup.confirm({
+            title: 'Reset Everything?',
+            template: 'Are you sure you want to reset all options?'
+        })
+        .then(function (result) {
+            if (result) {
+                modifiersService.reset();
+            } 
+        });
+    };
 })
 
 .controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {

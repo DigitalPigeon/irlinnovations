@@ -24,10 +24,22 @@
                     <ion-item menu-close ng-click="changeAttackType('{{meleeAttackType}}')"   >
                         Melee Attack
                     </ion-item>
-                </ion-list>
+                </ion-list>                
                 <ion-list>
                     <ion-item menu-close ng-click="showTablessView('app.myCharacter')">
                         My Character
+                    </ion-item>
+                </ion-list>                
+                <ion-item></ion-item>
+                <ion-list>
+                    <ion-item menu-close ng-click="reset()">
+                        Reset Everything
+                    </ion-item>
+                </ion-list>
+                <ion-item></ion-item>
+                <ion-list>
+                    <ion-item menu-close ng-click="showTablessView('app.welcome')">
+                        Welcome
                     </ion-item>
                 </ion-list>
             </ion-content>            

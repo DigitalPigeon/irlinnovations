@@ -107,6 +107,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
               }
           }
       })
+
+        //welcome screen
+        .state('app.welcome', {
+            url: '/welcome',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/standalone/welcome.html'                    
+                }
+            }
+        })
     
     //reusable template pages
 
@@ -126,7 +136,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/tab/attack');
+  $urlRouterProvider.otherwise('/app/welcome');
 
 })
 
