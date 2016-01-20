@@ -44,9 +44,9 @@ angular.module('starter.services', [])
             reset: function () {
                 angular.forEach(this.all(), function (value, key) {
                     value.checked = false;
-                    attackTypeService.changeAttackType(attackTypeService.rangedAttackType);
-                    $state.go('app.tab.attack');
                 });
+                console.log(attackTypeService.changeAttackType);
+                attackTypeService.changeAttackType(attackTypeService.rangedAttackType);
             },
 
             selected: function() {
@@ -57,6 +57,16 @@ angular.module('starter.services', [])
                     }
                 });
                 return modifiers;
+            },
+
+            selectedChecksum: function () {
+                var checksum = 0;
+                angular.forEach(this.all(), function (value, key) {
+                    if (value.checked) {
+                        checksum += value.id;
+                    }
+                });
+                return checksum;
             },
 
             affectsAttackerPool: function() {

@@ -18,7 +18,6 @@ angular.module('starter.controllers', [])
     $scope.goHome = function () { $state.go('app.tab.attack'); }
 
     $scope.reset = function () {
-
         $ionicPopup.confirm({
             title: 'Reset Everything?',
             template: 'Are you sure you want to reset all options?'
@@ -29,6 +28,8 @@ angular.module('starter.controllers', [])
             } 
         });
     };
+
+    
 })
 
 .controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {
@@ -47,10 +48,10 @@ angular.module('starter.controllers', [])
 .controller('TargetCtrl', function () {    
 })
 
-.controller('ResultCtrl', function ($scope, $stateParams, modifiersService, attackTypeService) {
+.controller('ResultCtrl', function ($scope, $stateParams, modifiersService) {
 
     var rebind = function() {
-        //$scope.selectedModifiers = modifiersService.selected();
+        //$scope.selectedModifiers = modifiersService.selected;
 
         $scope.selectedAttackerPoolModifiers = modifiersService.affectsAttackerPool();
         $scope.selectedDvModifiers = modifiersService.affectsDv();
@@ -63,10 +64,13 @@ angular.module('starter.controllers', [])
         $scope.defenderPoolTotal = modifiersService.defenderPoolTotal();
     };
     
-    $scope.$on('$ionicView.enter', rebind);
-    $scope.$watch('attackType.name', rebind);
+    $scope.$on('$ionicView.enter', function() { rebind(); });
 
-    //$scope.attackType = attackTypeService.attackType;
+    //rebind totals when switching attack type from slide out menu
+    $scope.$watch(function () { return $scope.attackType.name; }, function (newValue, oldValue) {  rebind(); });
+
+    //rebind totals when the psuedo checksum of selected items changes (specifically for when a reset-all is issued from slide out menu)
+    $scope.$watch(function () { return modifiersService.selectedChecksum(); }, function (newValue, oldValue) {  rebind(); });
 
     
 })
