@@ -32,8 +32,7 @@
 
   <icon src="icon.png" />
   
-  <gap:plugin name="com.admob.plugin" version="3.0.0" source="plugins.cordova.io" />
-  
+   
   <gap:platform name="android" />
   <!--
     <gap:platform name="ios" />
