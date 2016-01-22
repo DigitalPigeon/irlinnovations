@@ -1,5 +1,26 @@
 angular.module('starter.services', [])
 
+.factory('tabAnimationService', function() {
+        var tabTracker = { tabIndex: 1 };
+
+        return {
+            getTransition: function(newTabIndex) {
+                var oldTabIndex = tabTracker.tabIndex;
+                tabTracker.tabIndex = newTabIndex;
+
+                console.log('from ' + oldTabIndex + ' to ' + newTabIndex);
+
+                if (oldTabIndex > newTabIndex) {
+                    
+                    return 'slideInLeft';
+                } else if (oldTabIndex < newTabIndex) {
+                    return 'slideInRight';
+                } else {
+                    return 'fadeIn';
+                }
+            }
+        }
+    })
 
 .factory('modifiersService', ['attackerSituations', 'firingModes', 'choke', 'defenderSituations', 'coverService',
                                 'equipmentService', 'ammoTypes', 

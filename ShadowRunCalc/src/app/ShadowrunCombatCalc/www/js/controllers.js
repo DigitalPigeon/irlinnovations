@@ -1,12 +1,12 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, tablessStateService) {
+.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, tablessStateService, tabAnimationService) {
 
     //all attack type services for binding
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
     $scope.meleeAttackType = attackTypeService.meleeAttackType;
     $scope.attackType = attackTypeService.attackType;
-    $scope.isRangedAttack = function () { return attackTypeService.isRangedAttack() };
+    $scope.isRangedAttack = function () { return attackTypeService.isRangedAttack(); };
 
     $scope.changeAttackType = function (newAttackType) {
         attackTypeService.changeAttackType(newAttackType);
@@ -29,11 +29,16 @@ angular.module('starter.controllers', [])
         });
     };
 
-    
-})
+    //manage tab direction
+    $scope.getTransition = tabAnimationService.getTransition;
+
+
+        })
 
 .controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {
-        
+
+    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(1); });
+
     //watch for change to attack type, if it occurs scroll to the top
     //this is important because melee is smaller than ranged, and can actually be scrolled
     //off of the viewable area
@@ -45,10 +50,17 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('TargetCtrl', function () {    
+.controller('TargetCtrl', function ($scope) {
+    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(2); });
+})
+
+.controller('EnvironmentCtrl', function ($scope) {
+    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(3); });
 })
 
 .controller('ResultCtrl', function ($scope, $stateParams, modifiersService) {
+
+    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(4); });
 
     var rebind = function() {
         //$scope.selectedModifiers = modifiersService.selected;
@@ -63,8 +75,8 @@ angular.module('starter.controllers', [])
         $scope.apTotal = modifiersService.apTotal();
         $scope.defenderPoolTotal = modifiersService.defenderPoolTotal();
     };
-    
-    $scope.$on('$ionicView.enter', function() { rebind(); });
+
+    $scope.$on('$ionicView.enter', function() {rebind();});
 
     //rebind totals when switching attack type from slide out menu
     $scope.$watch(function () { return $scope.attackType.name; }, function (newValue, oldValue) {  rebind(); });
@@ -81,9 +93,6 @@ angular.module('starter.controllers', [])
     $scope.enableTablessView($scope);    
 })
 
-
-.controller('EnvironmentCtrl', function () {
-})
 
 
 .controller('PopoutCtrl', function ($scope, $stateParams) {
