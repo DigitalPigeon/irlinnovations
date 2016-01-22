@@ -109,6 +109,22 @@ angular.module('starter.controllers', [])
 
     //all services have an all() method.
     $scope.items = itemService.all();
+    $scope.popout = false;
+
+    //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
+    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && itemService.selected && $scope.name) {
+        
+        //exclusive group found. Default to using popout unless not all options are exclusive
+        $scope.popout = true;
+        var exclsuiveGroup = $scope.items[0].exclusiveGroup;
+        angular.forEach($scope.items, function (value, key) {
+            //if the exclusive group is not consistent, do not allow popout;
+            if (value.exclusiveGroup != exclsuiveGroup) {
+                $scope.popout = false;
+            }
+        });
+    }
+    
         
     //only single selectable services have the selected() method, so check for it safely
     //the call to itemService.selected() needs to be wrapped in a local function for scope adherance

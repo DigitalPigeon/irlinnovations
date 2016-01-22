@@ -327,19 +327,35 @@ angular.module('starter.services', [])
             return attackType;
         },
 
-        isModifierApplicable: function(modifier) {
-            //if we are looking for ranged but we find a specific melee modifier, it is not applicable
-            if (attackType.name == 'Ranged' && modifier.melee) {
-                return false;
+        isModifierApplicable: function (modifiers) {
+
+            var isArray = angular.isArray(modifiers);
+            var validCount = 0;
+
+            if (!isArray) {
+                modifiers = [modifiers];
             }
 
-            //if we are looking for melee but we find a specific ranged modifier, it is not applicable
-            if (attackType.name == 'Melee' && modifier.ranged) {
-                return false;
-            }
+            angular.forEach(modifiers, function(value, key) {
 
-            //in all other cases (including where no specific modifer is supplied) then we treat as applicable
-            return true;
+                //if we are looking for ranged but we find a specific melee modifier, it is not applicable
+                if (attackType.name == 'Ranged' && value.melee) {
+                    return false;
+                }
+
+                //if we are looking for melee but we find a specific ranged modifier, it is not applicable
+                if (attackType.name == 'Melee' && value.ranged) {
+                    return false;
+                }
+
+                //this item is valid for this attack type
+                validCount += 1;
+                return true;
+            });
+
+            //if at least one specified item is value, then return true
+            return validCount >= 1;
+            
         }
     };
 })

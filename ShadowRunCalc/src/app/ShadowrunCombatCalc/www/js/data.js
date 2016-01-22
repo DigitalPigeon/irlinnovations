@@ -3,23 +3,22 @@ angular.module('starter.data', [])
 .factory('attackerSituations', function() {
 
     var options = [
-            { id: 1, name: 'Firing from Cover w/ Imaging', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, ranged: true },
+            { id: 1, name: 'Firing from Cover w/ Imaging', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, ranged: true},
             { id: 2, name: 'Firing from Moving Vehicle', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, ranged: true },
             { id: 3, name: 'In Melee Combat', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, ranged: true },
             { id: 4, name: 'Running', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, ranged: true },
-            { id: 5, name: 'Using Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, ranged: true },
             { id: 6, name: 'Blind Fire', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, ranged: true },
-            { id: 7, name: 'Called Shot (Vitals)', ap: 0, dv: 2, attackerPool: -4, defenderPool: 0, ranged: true },
             
             { id: 8, name: 'Charging Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 9, name: 'Attacking from Prone', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, melee: true },
             { id: 10, name: 'Superior Position', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 11, name: 'Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0, melee: true },
-            { id: 12, name: 'Called Shot (Vitals)', ap: 0, dv: 0, attackerPool: -4, defenderPool: 0, melee: true },
-            { id: 13, name: 'Defender Receiving Charge', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'setToReceiveCharge' },
+            //{ id: 13, name: 'Attacker has Net Reach', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee:true, allowMultiple: true},
             { id: 14, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'defenderProne' },
             { id: 15, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 16, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true }
+            { id: 16, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },
+
+            { id: 12, name: 'Called Shot (Vitals)', ap: 0, dv: 2, attackerPool: -4, defenderPool: 0 },
+            { id: 11, name: 'Off-Hand Weapon', ap: 0, dv: 0, attackerPool: -2, defenderPool: 0 }
         ];
 
     return {
@@ -104,6 +103,16 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;
+        },
+
+    selected: function () {
+            var selectedItem = null;
+            angular.forEach(this.all(), function (value, item) {
+                if (value.checked) {
+                    selectedItem = value;
+                }
+            });
+            return selectedItem;
         }
     };
 })
@@ -114,8 +123,9 @@ angular.module('starter.data', [])
             { id: 1, name: 'Prone', ap: 0, dv: 0, attackerPool: 0, defenderPool: -2, mutualGroup: 'defenderProne' },
             { id: 2, name: 'Running', ap: 0, dv: 0, attackerPool: 0, defenderPool: 2 },
             { id: 3, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
-            { id: 4, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true, mutualGroup: 'setToReceiveCharge' },
-            { id: 5, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, ranged:true }
+            { id: 4, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true},
+            { id: 5, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, ranged: true },
+            //{ id: 6, name: 'Defender has Net Reach', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true, allowMultiple: true}
             
         ];
 
@@ -228,9 +238,9 @@ angular.module('starter.data', [])
 .factory('rangeModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Medium', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
-            { id: 2, name: 'Long', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
-            { id: 3, name: 'Extreme', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true }
+            { id: 1, name: 'Medium Range', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
+            { id: 2, name: 'Long Range', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true },
+            { id: 3, name: 'Extreme Range', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true }
         ];
 
     return {

@@ -1,21 +1,16 @@
 <ion-view view-title="{{attackType.name}} Attack" >
     <ion-content class="padding animated" ng-class="tabAnimation">
         
-        <modifier-popout-block name="Firing Mode" ng-if="isRangedAttack()"
-                               item-service-name="firingModes"></modifier-popout-block>
+        <modifier-block name="Firing Mode" item-service-name="firingModes"></modifier-block>
             
-        <modifier-popout-block name="Ammunition" ng-if="isRangedAttack()"
-                               item-service-name="ammoTypes"></modifier-popout-block>
+        <modifier-block name="Ammunition" item-service-name="ammoTypes"></modifier-block>
 
         
-        <modifier-block 
-            name="Attacker's Situation"
-            item-service-name="attackerSituations"></modifier-block>
+        <modifier-block name="Attacker's Situation" item-service-name="attackerSituations"></modifier-block>
         
             
         
-        <modifier-popout-block name="Shotgun Choke" ng-if="isRangedAttack()"
-                               item-service-name="choke"></modifier-popout-block>
+        <modifier-block name="Shotgun Choke" item-service-name="choke"></modifier-block>
                         
         
 

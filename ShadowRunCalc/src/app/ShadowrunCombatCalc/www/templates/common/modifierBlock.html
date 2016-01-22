@@ -1,10 +1,20 @@
-<h3 ng-if="name!=''">{{name}}</h3>
-<ion-list>
-    <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
-        <label class=" checkbox">
-            <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked">
-            {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
-        </label>
-    </ion-item>
-</ion-list>
-<br />
+<!-- if a name isn't passed in, don't even bother rendering the header -->
+<div ng-if="isModifierApplicable(items)">
+    <h3 ng-if="name!=''">{{name}}</h3>
+
+    <!-- Inline selections -->
+    <ion-list ng-if="!popout">
+        <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
+            <label class=" checkbox">
+                <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked">
+                {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+            </label>
+        </ion-item>
+    </ion-list>
+
+    <!-- Popout selections -->
+    <modifier-popout-block name="{{name}}" item-service-name="{{itemServiceName}}" ng-if="popout"></modifier-popout-block>
+    
+    <br />
+
+</div>
