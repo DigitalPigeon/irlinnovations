@@ -1,34 +1,41 @@
 <ion-view view-title="{{attackType.name}} Attack Results">
     <ion-content class="padding animated" ng-class="tabAnimation">
         
-     
-
-
-        <h3>Att Pool: {{attackerPoolTotal >= 0 ? '+' : ''}}{{attackerPoolTotal}}</h3>
-        <ion-list  >
+        <h3>Att Pool: <irl-signed-number value="attackerPoolTotal"></irl-signed-number></h3>
+        <ion-list  >            
             <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} ({{modifier.attackerPool >= 0 ? '+' : ''}}{{modifier.attackerPool}})</small>
+                <small>{{modifier.name}} 
+                    (<irl-signed-number value="modifier.attackerPoolCap!=null?modifier.attackerPoolCap:modifier.attackerPool"></irl-signed-number>)
+                    <span ng-if="modifier.attackerPoolCap!=null"> *Capped</span>
+                </small>
             </ion-item>
         </ion-list>
+                
+        <irl-ion-hr></irl-ion-hr>
+        
 
-        <h3>Def Pool: {{defenderPoolTotal >= 0 ? '+' : ''}}{{defenderPoolTotal}}</h3>
+        <h3>Def Pool: <irl-signed-number value="defenderPoolTotal"></irl-signed-number></h3>
         <ion-list>
             <ion-item ng-repeat="modifier in selectedDefenderPoolModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} ({{modifier.defenderPool >= 0 ? '+' : ''}}{{modifier.defenderPool}})</small>
+                <small>{{modifier.name}} (<irl-signed-number value="modifier.defenderPool"></irl-signed-number>)</small>
             </ion-item>
         </ion-list>
+        
+        <irl-ion-hr></irl-ion-hr>
 
-        <h3>DV: {{dvTotal >= 0 ? '+' : ''}}{{dvTotal}}</h3>
+        <h3>DV: <irl-signed-number value="dvTotal"></irl-signed-number></h3>
         <ion-list  >
             <ion-item ng-repeat="modifier in selectedDvModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} ({{modifier.dv >= 0 ? '+' : ''}}{{modifier.dv}})</small>
+                <small>{{modifier.name}} (<irl-signed-number value="modifier.dv"></irl-signed-number>)</small>
             </ion-item>
         </ion-list>
 
-        <h3>AP: {{apTotal >= 0 ? '+' : ''}}{{apTotal}}</h3>
+        <irl-ion-hr></irl-ion-hr>
+
+        <h3>AP: <irl-signed-number value="apTotal"></irl-signed-number></h3>
         <ion-list  >
             <ion-item ng-repeat="modifier in selectedApModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} ({{modifier.ap >= 0 ? '+' : ''}}{{modifier.ap}})</small>
+                <small>{{modifier.name}}  (<irl-signed-number value="modifier.ap"></irl-signed-number>)</small>
             </ion-item>
         </ion-list>
 

@@ -25,4 +25,25 @@ angular.module('starter.directives', [])
     };
 })
 
+.directive('irlIonHr', function () {
+    return {
+        restrict: 'E',                
+        templateUrl: 'templates/common/irlIonHr.html',
+    };
+})
+
+.directive('irlSignedNumber', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/common/irlSignedNumber.html',        
+        scope: {
+            zeroIsSigned: '=',
+            value: '='
+        },
+        compile: function (element, attributes) {
+            if (!attributes.zeroIsSigned) { attributes.zeroIsSigned = 'true';  }            
+        }        
+    };
+})
+
 ;

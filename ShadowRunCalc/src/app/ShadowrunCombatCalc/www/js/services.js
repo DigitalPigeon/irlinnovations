@@ -7,9 +7,7 @@ angular.module('starter.services', [])
             getTransition: function(newTabIndex) {
                 var oldTabIndex = tabTracker.tabIndex;
                 tabTracker.tabIndex = newTabIndex;
-
-                console.log('from ' + oldTabIndex + ' to ' + newTabIndex);
-
+                                
                 if (oldTabIndex > newTabIndex) {
                     
                     return 'slideInLeft';
@@ -33,7 +31,8 @@ angular.module('starter.services', [])
                                             attackTypeService,
                                             $filter, $ionicPopup, $state) {
         return {
-            all: function() {
+
+            all: function () {
 
                 var modifiers = [];
                 
@@ -111,7 +110,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.affectsAttackerPool(), function (value, key) {
 
-                    total = total + value.attackerPool;
+                    total = total + (value.attackerPoolCap != null ? value.attackerPoolCap : value.attackerPool);
                 });
 
                 return total;
@@ -217,13 +216,6 @@ angular.module('starter.services', [])
                 }
 
                
-                //max one cover
-                filteredResults = $filter('filter')(allSelected, { cover: true });
-                if (filteredResults.length > 1) {
-                    angular.forEach(filteredResults, function(value, key) { value.checked = false; });
-                    currentSelection.checked = true;
-                }
-
                 //only one option in an exclusive group is allowed
                 if (currentSelection.checked && currentSelection.exclusiveGroup != null) {
                     //get all selected modifiers where the exclusiveGroup is the same as the current selections exclusive group, and deselct them
@@ -244,6 +236,32 @@ angular.module('starter.services', [])
                     angular.forEach(filteredResults, function(value, key) {
                          value.checked = currentSelection.checked;
                     });
+                }
+
+                //there is a max limit penalty of -10 for environmental modifiers
+                //do not allow these to exceed 10. if they do, we need to apply caps on each over the limit
+                if (currentSelection.environment != null) {
+                    var minEnvironment = -10;
+                    var environment = 0;
+
+                    filteredResults = $filter('filter')(all, { environment: true });
+                    angular.forEach(filteredResults, function (value, key) {
+                        if (value.checked)
+                        {
+                            if (environment + value.attackerPool < minEnvironment)
+                            {
+                                var cap = minEnvironment - environment;
+                                value.attackerPoolCap = cap;
+                            }
+                            else
+                            {
+                                value.attackerPoolCap = null;
+                            }
+
+                            environment += value.attackerPoolCap!=null?value.attackerPoolCap: value.attackerPool;
+                        }
+                    });
+
                 }
                 
                 return true;
