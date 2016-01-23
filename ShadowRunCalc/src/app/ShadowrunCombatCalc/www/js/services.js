@@ -201,16 +201,27 @@ angular.module('starter.services', [])
             },
 
 
-            validateSelection: function (currentSelection, toggleCurrentSelection) {
+            validateSelection: function (currentSelection, toggleCurrentSelection, recursiveCallers) {
                 
-                var allSelected = this.selected();
-                var all = this.all();
+                service = this;
+                recursiveCallers = recursiveCallers || [];
 
-                var filteredResults;
+                var recurse = function (itemToRecurse) {
+                    if (!$filter('filter')(this.recursiveCallers, function(recursiveCaller) {itemToRecurse == recursiveCaller}))
+                    {
+                        console.log('recurse ' + itemToRecurse.name)
+                        recursiveCallers.push(currentSelection);
+                        service.validateSelection(itemToRecurse, null, recursiveCallers);
+                    }
+                    {
+                        console.log('do not recurse ' + itemToRecurse.name)
+                    }
+                };
 
-                console.log(this);
+                var allSelected = service.selected();
+                var all = service.all();
 
-                var validateSelection = this.validateSelection;
+                var filteredResults;                            
 
                 var recusive = function (c, t) { return validateSelection(c, t); }
 
@@ -224,8 +235,10 @@ angular.module('starter.services', [])
                 if (currentSelection.requires && currentSelection.checked) {
                     filteredResults = $filter('filter')(all, { requiredBy: currentSelection.requires });
                     angular.forEach(filteredResults, function (value, key) {
-                        value.checked = true;
-                        recusive(value);
+                        if (!value.checked) {
+                            value.checked = true;
+                            recurse(value);
+                        }                        
                     });
                     }
                 
@@ -233,8 +246,12 @@ angular.module('starter.services', [])
                 if (currentSelection.requiredBy && !currentSelection.checked) {
                     filteredResults = $filter('filter')(all, { requires: currentSelection.requiredBy });
                     angular.forEach(filteredResults, function (value, key) {
-                        value.checked = false;
-                        recusive(value);
+                        if (value.checked)
+                        {
+                            value.checked = false;
+                            recurse(value);
+                        }
+                        
                     });
                 }
 
@@ -245,10 +262,10 @@ angular.module('starter.services', [])
                     filteredResults = $filter('filter')(all, { exclusiveGroup: currentSelection.exclusiveGroup});
                     angular.forEach(filteredResults, function(value, key) {
                          //do not modifer outselves
-                         if (value != currentSelection) {
+                         if (value != currentSelection && (value.checked || value.multiplier)) {
                              value.checked = false;
                              value.multiplier = null;
-                             recusive(value);
+                             recurse(value);
                          }
                     });
                 }
@@ -259,8 +276,12 @@ angular.module('starter.services', [])
                     //get all modifiers where the mutualGroup is the same as the current selections mutual group
                     filteredResults = $filter('filter')(all, { mutualGroup: currentSelection.mutualGroup });
                     angular.forEach(filteredResults, function(value, key) {
-                        value.checked = currentSelection.checked;
-                        recusive(value);
+                        if (value.checked != currentSelection.checked)
+                        {
+                            value.checked = currentSelection.checked;
+                            recurse(value);
+                        }
+                        
                     });
                 }
 
@@ -269,14 +290,14 @@ angular.module('starter.services', [])
                      if (currentSelection.checked) {
                          $ionicPopup.prompt({ title: currentSelection.name, inputType:'number' })
                              .then(function(result) {
-                                 if (result) {
+                                 if (result && currentSelection.multiplier != result) {
                                      currentSelection.multiplier = result;
                                  } 
                                  //if the user doesn't supply a number, deleselt the option and clear the multiplier
-                                 else {
+                                 else if (!result && (currentSelection.checked || currentSelection.multiplier)) {
                                      currentSelection.checked = false;
                                      currentSelection.multiplier = null;
-                                     recusive(value);
+                                     recurse(value);
                                  }
                              });
                          } else {

@@ -5,7 +5,7 @@
         <ion-list  >            
             <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-padding row-no-border">
                 <small>{{modifier.name}} 
-                    {{formatStats(modifier, '(', ')', ', ', 'Att')}}</small>                    
+                    {{formatStats(modifier, '(', ')', ', ', 'Att')}}                    
                     <span ng-if="modifier.attackerPoolCap!=null"> *Capped</span>
                 </small>
             </ion-item>
