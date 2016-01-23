@@ -12,7 +12,7 @@ angular.module('starter.data', [])
             { id: 8, name: 'Charging Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 9, name: 'Attacking from Prone', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, melee: true },
             { id: 10, name: 'Superior Position', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            //{ id: 13, name: 'Attacker has Net Reach', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee:true, allowMultiple: true},
+            { id: 13, name: 'Attacker has Net Reach', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee:true, allowMultiple: true, exclusiveGroup: 'netReach'},
             { id: 14, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'defenderProne' },
             { id: 15, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 16, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },
@@ -61,6 +61,34 @@ angular.module('starter.data', [])
 })
 
 .factory('choke', function () {
+
+    var options = [
+            { id: 1, name: 'Narrow Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -1, exclusiveGroup: 'choke', requires:'flechette', ranged: true },
+            { id: 2, name: 'Medium Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, exclusiveGroup: 'choke', requires:'flechette', ranged: true },
+            { id: 3, name: 'Wide Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -5, exclusiveGroup: 'choke', requires: 'flechette', ranged: true }
+            
+
+        ];
+
+    return {
+        all: function () {
+            return options;
+        },
+
+        selected: function () {
+            var selectedItem = null;
+            angular.forEach(this.all(), function (value, item) {
+                if (value.checked) {
+                    selectedItem = value;
+                }
+            });
+            return selectedItem;
+        }
+    };
+})
+
+
+.factory('suppressed', function () {
 
     var options = [
             { id: 1, name: 'Shotgun Narrow Spread', ap: 0, dv: 0, attackerPool: 0, defenderPool: -1, exclusiveGroup: 'choke', ranged: true },
@@ -125,7 +153,7 @@ angular.module('starter.data', [])
             { id: 3, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
             { id: 4, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true},
             { id: 5, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, ranged: true },
-            //{ id: 6, name: 'Defender has Net Reach', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true, allowMultiple: true}
+            { id: 6, name: 'Defender has Net Reach', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee: true, allowMultiple: true, exclusiveGroup: 'netReach' }
             
         ];
 
@@ -144,7 +172,7 @@ angular.module('starter.data', [])
             { id: 3, name: 'Regular Ammo', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
             { id: 3, name: 'APDS', ap: -4, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
             { id: 4, name: 'Explosive', ap: -1, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
-            { id: 5, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
+            { id: 5, name: 'Flechette', ap: 5, dv: 2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', requiredBy: 'flechette', ranged: true },
             { id: 6, name: 'Gel', ap: 1, dv: 0, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
             { id: 7, name: 'Hollow Point', ap: 2, dv: 1, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },
             { id: 8, name: 'Stick-n-Shock', ap: -5, dv: -2, attackerPool: 0, defenderPool: 0, exclusiveGroup: 'ammo', ranged: true },

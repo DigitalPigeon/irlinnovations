@@ -5,7 +5,7 @@
         <ion-list  >            
             <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-padding row-no-border">
                 <small>{{modifier.name}} 
-                    (<irl-signed-number value="modifier.attackerPoolCap!=null?modifier.attackerPoolCap:modifier.attackerPool"></irl-signed-number>)
+                    {{formatStats(modifier, '(', ')', ', ', 'Att')}}</small>                    
                     <span ng-if="modifier.attackerPoolCap!=null"> *Capped</span>
                 </small>
             </ion-item>
@@ -17,7 +17,8 @@
         <h3>Def Pool: <irl-signed-number value="defenderPoolTotal"></irl-signed-number></h3>
         <ion-list>
             <ion-item ng-repeat="modifier in selectedDefenderPoolModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} (<irl-signed-number value="modifier.defenderPool"></irl-signed-number>)</small>
+                <small>{{modifier.name}} 
+                    {{formatStats(modifier, '(', ')', ', ', 'Def')}}</small>                    
             </ion-item>
         </ion-list>
         
@@ -26,7 +27,8 @@
         <h3>DV: <irl-signed-number value="dvTotal"></irl-signed-number></h3>
         <ion-list  >
             <ion-item ng-repeat="modifier in selectedDvModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} (<irl-signed-number value="modifier.dv"></irl-signed-number>)</small>
+                <small>{{modifier.name}} 
+                    {{formatStats(modifier, '(', ')', ', ', 'DV')}}</small>                    
             </ion-item>
         </ion-list>
 
@@ -35,7 +37,8 @@
         <h3>AP: <irl-signed-number value="apTotal"></irl-signed-number></h3>
         <ion-list  >
             <ion-item ng-repeat="modifier in selectedApModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}}  (<irl-signed-number value="modifier.ap"></irl-signed-number>)</small>
+                <small>{{modifier.name}} 
+                    {{formatStats(modifier, '(', ')', ', ', 'AP')}}</small>                    
             </ion-item>
         </ion-list>
 

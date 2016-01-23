@@ -84,6 +84,7 @@ angular.module('starter.controllers', [])
     //rebind totals when the psuedo checksum of selected items changes (specifically for when a reset-all is issued from slide out menu)
     $scope.$watch(function () { return modifiersService.selectedChecksum(); }, function (newValue, oldValue) {  rebind(); });
 
+    $scope.formatStats = modifiersService.formatStats;
     
 })
 
@@ -103,7 +104,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ModifierBlockCtrl', function ($scope, $injector, modifiersService, tablessStateService, attackTypeService) {
+.controller('ModifierBlockCtrl', function ($scope, $injector, $ionicPopup, modifiersService, tablessStateService, attackTypeService) {
 
     var itemService = $injector.get($scope.itemServiceName);
 
@@ -125,6 +126,19 @@ angular.module('starter.controllers', [])
         });
     }
     
+    /*
+    $scope.checkForSubPopout = function(item) {
+        if (item.allowMultiple) {
+            //$scope.showTablessView('app.popout', { name: $scope.name, itemServiceName: 'selectMultipleCountService', parentItemId: item.id, parentItemServiceName: $scope.itemServiceName });
+            $ionicPopup.prompt({title: $scope.name})
+                .then(function(result) {
+                if (result) {
+                    
+                }
+            });
+        }
+    }
+     */
         
     //only single selectable services have the selected() method, so check for it safely
     //the call to itemService.selected() needs to be wrapped in a local function for scope adherance

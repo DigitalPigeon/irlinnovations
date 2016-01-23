@@ -4,9 +4,9 @@
 
     <!-- Inline selections -->
     <ion-list ng-if="!popout">
-        <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
+        <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="checkForSubPopout(item); validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
             <label class=" checkbox">
-                <input type="checkbox" ng-click="validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked">
+                <input type="checkbox" ng-click="checkForSubPopout(item); validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked">
                 {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
             </label>
         </ion-item>

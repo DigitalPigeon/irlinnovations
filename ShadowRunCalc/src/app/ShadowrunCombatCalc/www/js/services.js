@@ -65,7 +65,6 @@ angular.module('starter.services', [])
                 angular.forEach(this.all(), function (value, key) {
                     value.checked = false;
                 });
-                console.log(attackTypeService.changeAttackType);
                 attackTypeService.changeAttackType(attackTypeService.rangedAttackType);
             },
 
@@ -110,7 +109,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.affectsAttackerPool(), function (value, key) {
 
-                    total = total + (value.attackerPoolCap != null ? value.attackerPoolCap : value.attackerPool);
+                    total = total + (value.attackerPoolCap != null ? value.attackerPoolCap : (value.multiplier ? value.multiplier * value.attackerPool : value.attackerPool));
                 });
 
                 return total;
@@ -138,7 +137,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.affectsDv(), function (value, key) {
 
-                    total = total + value.dv;
+                    total = total + (value.multiplier ? value.multiplier * value.dv : value.dv);
                 });
 
                 return total;
@@ -166,7 +165,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.affectsAp(), function (value, key) {
 
-                    total = total + value.ap;
+                    total = total + (value.multiplier ? value.multiplier * value.ap : value.ap);
                 });
 
                 return total;
@@ -194,7 +193,7 @@ angular.module('starter.services', [])
 
                 angular.forEach(this.affectsDefenderPool(), function (value, key) {
 
-                    total = total + value.defenderPool;
+                    total = total + (value.multiplier ? value.multiplier * value.defenderPool : value.defenderPool);
                 });
 
                 return total;
@@ -206,13 +205,37 @@ angular.module('starter.services', [])
                 
                 var allSelected = this.selected();
                 var all = this.all();
-                
+
                 var filteredResults;
+
+                console.log(this);
+
+                var validateSelection = this.validateSelection;
+
+                var recusive = function (c, t) { return validateSelection(c, t); }
 
                 //if toggle current selection, then we need to change this items checked state
                 if (toggleCurrentSelection)
                 {
                     currentSelection.checked = !currentSelection.checked;
+                }
+
+                //check if this requires anything else and we are enabling it
+                if (currentSelection.requires && currentSelection.checked) {
+                    filteredResults = $filter('filter')(all, { requiredBy: currentSelection.requires });
+                    angular.forEach(filteredResults, function (value, key) {
+                        value.checked = true;
+                        recusive(value);
+                    });
+                    }
+                
+                //check if this is required by anything else and we are disabling it
+                if (currentSelection.requiredBy && !currentSelection.checked) {
+                    filteredResults = $filter('filter')(all, { requires: currentSelection.requiredBy });
+                    angular.forEach(filteredResults, function (value, key) {
+                        value.checked = false;
+                        recusive(value);
+                    });
                 }
 
                
@@ -223,7 +246,9 @@ angular.module('starter.services', [])
                     angular.forEach(filteredResults, function(value, key) {
                          //do not modifer outselves
                          if (value != currentSelection) {
-                            value.checked = false;    
+                             value.checked = false;
+                             value.multiplier = null;
+                             recusive(value);
                          }
                     });
                 }
@@ -234,9 +259,32 @@ angular.module('starter.services', [])
                     //get all modifiers where the mutualGroup is the same as the current selections mutual group
                     filteredResults = $filter('filter')(all, { mutualGroup: currentSelection.mutualGroup });
                     angular.forEach(filteredResults, function(value, key) {
-                         value.checked = currentSelection.checked;
+                        value.checked = currentSelection.checked;
+                        recusive(value);
                     });
                 }
+
+                //picking a multi selecter requires the user to provide a multiplier
+                 if (currentSelection.allowMultiple) {
+                     if (currentSelection.checked) {
+                         $ionicPopup.prompt({ title: currentSelection.name, inputType:'number' })
+                             .then(function(result) {
+                                 if (result) {
+                                     currentSelection.multiplier = result;
+                                 } 
+                                 //if the user doesn't supply a number, deleselt the option and clear the multiplier
+                                 else {
+                                     currentSelection.checked = false;
+                                     currentSelection.multiplier = null;
+                                     recusive(value);
+                                 }
+                             });
+                         } else {
+                         {
+                             currentSelection.multiplier = null;
+                         }
+                     }
+                 }
 
                 //there is a max limit penalty of -10 for environmental modifiers
                 //do not allow these to exceed 10. if they do, we need to apply caps on each over the limit
@@ -267,8 +315,9 @@ angular.module('starter.services', [])
                 return true;
 
             },
+            
 
-            formatStats: function (item, prefix, suffix, seperator) {
+            formatStats: function (item, prefix, suffix, seperator, simpleFormatFor) {
 
                 if (item == null)
                 {
@@ -277,24 +326,33 @@ angular.module('starter.services', [])
 
                 var stats = [];
 
-                if (item.attackerPool && item.attackerPool != 0) {
-                    stats.push('Att: ' + (item.attackerPool>=0?'+':'') + item.attackerPool);
-                }
+                var addStat = function(name, value, multiplier) {
+                    if (value && value != 0) {
+                        if (multiplier) { value = value * multiplier; }
 
-                if (item.defenderPool && item.defenderPool != 0) {
-                    stats.push('Def: ' + (item.defenderPool >= 0 ? '+' : '') + item.defenderPool);
-                }
+                        var formatString = '';
 
-                if (item.dv && item.dv != 0) {
-                    stats.push('DV: ' + (item.dv >= 0 ? '+' : '') + item.dv);
-                }
+                        //only add stamps when not looking for the simple format, or when looking for the simple format
+                        //and the stat matches the stat looked for in the simple format
+                        if (!simpleFormatFor || simpleFormatFor == name) {
 
-                if (item.ap && item.ap != 0) {
-                    stats.push('AP: ' + (item.ap >= 0 ? '+' : '') + item.ap);
-                }
+                            //add a name if not doing simple format
+                            if (!simpleFormatFor) {
+                                formatString = name + ': ';
+                            }
+
+                            stats.push(formatString + (value >= 0 ? '+' : '') + value);
+                        }
+                    }   
+                };
+
+                addStat('Att', item.attackerPool, item.multiplier);
+                addStat('Def', item.defenderPool, item.multiplier);
+                addStat('DV', item.dv, item.multiplier);
+                addStat('AP', item.ap, item.multiplier);
 
                 if (stats.length > 0) {
-                    return prefix + stats.join(seperator) + suffix;
+                    return prefix + (item.multiplier?'x' + item.multiplier + ' = ':'') + stats.join(seperator) + suffix;
                 } else {
                     return '';
                 }
@@ -402,7 +460,7 @@ angular.module('starter.services', [])
             
         }
     };
-}])
+} ])
 
 
 ;
