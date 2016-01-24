@@ -98,6 +98,10 @@ angular.module('starter.controllers', [])
 
 .controller('PopoutCtrl', function ($scope, $stateParams) {
 
+    //$scope.$on('$ionicView.enter', function () {        
+    //    $scope.enableTablessView($scope);
+    //});
+
     $scope.enableTablessView($scope);
     $scope.name = $stateParams.name;
     $scope.itemServiceName = $stateParams.itemServiceName;
@@ -108,12 +112,14 @@ angular.module('starter.controllers', [])
 
     var itemService = $injector.get($scope.itemServiceName);
 
-    //all services have an all() method.
     $scope.items = itemService.all();
+    $scope.infoPageState = itemService.infoPageState;
+
+
     $scope.popout = false;
 
     //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
-    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && itemService.selected && $scope.name) {
+    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && $scope.name) {
         
         //exclusive group found. Default to using popout unless not all options are exclusive
         $scope.popout = true;
@@ -126,28 +132,21 @@ angular.module('starter.controllers', [])
         });
     }
     
-    /*
-    $scope.checkForSubPopout = function(item) {
-        if (item.allowMultiple) {
-            //$scope.showTablessView('app.popout', { name: $scope.name, itemServiceName: 'selectMultipleCountService', parentItemId: item.id, parentItemServiceName: $scope.itemServiceName });
-            $ionicPopup.prompt({title: $scope.name})
-                .then(function(result) {
-                if (result) {
-                    
-                }
+    if ($scope.popout)
+    {
+        $scope.$watch(function () {
+            var items = [];
+            angular.forEach(itemService.all(), function (value, key) {
+                if (value.checked) { items.push(value) }
             });
-        }
+            if (items && items.length > 0) {
+                return items[0]
+            };
+            return null;
+        }, function (newItem, oldItem) {
+                $scope.item = newItem || { name: 'None Selected', checked: false }});
     }
-     */
         
-    //only single selectable services have the selected() method, so check for it safely
-    //the call to itemService.selected() needs to be wrapped in a local function for scope adherance
-    if (itemService.selected) {
-        $scope.$watch(function () { return itemService.selected(); }, function (newItem, oldItem) {                       
-            $scope.item = newItem || { name: 'None Selected', checked: false };
-        });
-    }    
-    
     //if a section name is supplied, assume this is shown inline. if there is no name, then assume we are modal
     $scope.goBackIfRequired = function () {                
         if (!$scope.name) {
@@ -162,6 +161,53 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('InfoRangeCtrl', function ($scope) {
+
+    $scope.enableTablessView($scope);
+
+    $scope.datas = 
+        [
+            
+            ['Pistols'],
+            ['Taser', '0-5', '6-10', '11-15', '16-20'],
+            ['Hold-Out', '0-5', '6-15', '16-30', '31-50'],
+            ['Light', '0-5', '6-15', '16-30', '31-50'],
+            ['Heavy', '0-5', '6-20', '21-40', '41-60'],
+
+            ['Automatics'],
+            ['Machine Pistol', '0-5', '6-15', '16-30', '31-50'],
+            ['SMG', '0-10', '11-40', '41-80', '81-150'],
+            ['Assault Rifle', '0-25', '26-150', '151-350', '351-550'],
+            
+            ['Longarms'],
+            ['Shotgun (flechette)', '0-15', '16-30', '31-45', '45-60'],
+            ['Shotgun (slug)', '0-10', '11-40', '41-80', '81-150'],
+            ['Sniper Rifle', '0-50', '51-350', '351-800', '801-1500'],
+
+            ['Heavy Weapons'],
+            ['LMG', '0-25', '26-200', '201-400', '401-800'],
+            ['MMG / HMG', '0-40', '41-250', '251-750', '751-1200'],
+            ['Assault Cannon', '0-50', '51-300', '301-750', '751-1500'],
+            ['Grenade Launcher', '5-50*', '51-100', '101-150', '151-500'],
+            ['Missle Launcher', '20-70*', '71-150', '151-450', '451-1500'],
+            
+            ['Ballistic Projectiles'],
+            ['Bow', '0-S', 'To S x 10', 'To S x 30', 'To S x 60'],
+            ['Light Crossbow', '0-6', '7-24', '25-60', '61-120'],
+            ['Medium Crossbow', '0-9', '10-36', '37-90', '91-150'],
+            ['Heavy Crossbow', '0-15', '16-45', '46-120', '121-180'],
+            
+            ['Impact Projectiles'],
+            ['Thrown Knife', '0-S', 'To S x 2', 'To S x 3', 'To S x 5'],
+            ['Shuriken', '0-S', 'To S x 2', 'To S x 5', 'To S x 7'],
+            
+            ['Thrown Grenades'],
+            ['Standard', '0-S x 2', 'To S x 4', 'To S x 6', 'To S x 10'],
+            ['Aerodynamic', '0-S x 2', 'To S x 4', 'To S x 8', 'To S x 15']
+
+        ];      
+
+})
 
 
 ;

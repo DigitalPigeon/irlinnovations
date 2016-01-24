@@ -117,6 +117,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 }
             }
         })
+
+    //info pages
+
+    //range page
+        .state('app.infoRange', {
+            url: '/infoRange',            
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/info/range.html',
+                    controller: 'InfoRangeCtrl'
+                }
+            }
+        })
     
     //reusable template pages
 

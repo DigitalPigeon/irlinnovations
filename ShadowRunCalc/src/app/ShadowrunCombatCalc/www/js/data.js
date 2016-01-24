@@ -46,16 +46,6 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;    
-        },
-
-        selected: function () {
-            var selectedItem = null;                    
-            angular.forEach(this.all(), function (value, item) {
-                if (value.checked) {                    
-                    selectedItem = value;
-                }
-            });
-            return selectedItem;
         }
     };
 })
@@ -73,16 +63,6 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;
-        },
-
-        selected: function () {
-            var selectedItem = null;
-            angular.forEach(this.all(), function (value, item) {
-                if (value.checked) {
-                    selectedItem = value;
-                }
-            });
-            return selectedItem;
         }
     };
 })
@@ -106,17 +86,7 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;
-        },
-
-        selected: function () {
-            var selectedItem = null;
-            angular.forEach(this.all(), function (value, item) {
-                if (value.checked) {
-                    selectedItem = value;
-                }
-            });
-            return selectedItem;
-        }
+        } 
     };
 })
 
@@ -131,17 +101,7 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;
-        },
-
-    selected: function () {
-            var selectedItem = null;
-            angular.forEach(this.all(), function (value, item) {
-                if (value.checked) {
-                    selectedItem = value;
-                }
-            });
-            return selectedItem;
-        }
+        } 
     };
 })
 
@@ -187,17 +147,7 @@ angular.module('starter.data', [])
     return {
         all: function () {
             return options;
-        },
-
-        selected: function () {
-        var selectedItem = null;                    
-        angular.forEach(this.all(), function (value, item) {
-            if (value.checked) {                    
-                selectedItem = value;
-            }
-        });
-        return selectedItem;
-    }
+        } 
     };
 })
 
@@ -266,15 +216,19 @@ angular.module('starter.data', [])
 .factory('rangeModifiers', function () {
 
     var options = [
-            { id: 1, name: 'Medium Range', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
-            { id: 2, name: 'Long Range', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true },
-            { id: 3, name: 'Extreme Range', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true }
+            { id: 1, name: 'Short Range', ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true },
+            { id: 2, name: 'Medium Range', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, environment:true, exclusiveGroup: 'range', ranged:true },
+            { id: 3, name: 'Long Range', ap: 0, dv: 0, attackerPool: -3, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true },
+            { id: 4, name: 'Extreme Range', ap: 0, dv: 0, attackerPool: -6, defenderPool: 0, environment: true, exclusiveGroup: 'range', ranged: true }
         ];
 
     return {
         all: function () {
             return options;
-        }
+        },
+
+        infoPageState: 'app.infoRange'
+    
     };
 })
 ;

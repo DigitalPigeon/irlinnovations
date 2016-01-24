@@ -201,12 +201,14 @@ angular.module('starter.services', [])
             },
 
 
-            validateSelection: function (currentSelection, toggleCurrentSelection, recursiveCallers) {
+            validateSelection: function (currentSelection, toggleCurrentSelection) {
                 
                 service = this;
-                recursiveCallers = recursiveCallers || [];
+                var recursiveCallers = [];
 
                 var recurse = function (itemToRecurse) {
+                    service.validateSelection(itemToRecurse);
+                    /*
                     if (!$filter('filter')(this.recursiveCallers, function(recursiveCaller) {itemToRecurse == recursiveCaller}))
                     {
                         console.log('recurse ' + itemToRecurse.name)
@@ -216,6 +218,7 @@ angular.module('starter.services', [])
                     {
                         console.log('do not recurse ' + itemToRecurse.name)
                     }
+                    */
                 };
 
                 var allSelected = service.selected();
@@ -444,21 +447,23 @@ angular.module('starter.services', [])
     return { 
         
         goBack: function () {            
-                $state.go($rootScope.lastTabsState);
+                $state.go($rootScope.lastTabsState.pop());
             },
         
         enable: function ($scope) {            
-            $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            $scope.$on('$ionicView.beforeEnter', function (event, viewData) {                
+                console.log('viewData.enableBack = true');
                 viewData.enableBack = true;
             });
-            
+                       
+
             //nav back
             var oldSoftBack = $rootScope.$ionicGoBack;
             var deregisterSoftBack = function() { $rootScope.$ionicGoBack = oldSoftBack; };
-            $rootScope.$ionicGoBack = function () {$state.go($rootScope.lastTabsState);};
+            $rootScope.$ionicGoBack = function () { $state.go($rootScope.lastTabsState.pop()); };
     
             //andorid back button
-            var deregisterHardBack = $ionicPlatform.registerBackButtonAction(function () { $state.go($rootScope.lastTabsState); }, 101);
+            var deregisterHardBack = $ionicPlatform.registerBackButtonAction(function () { $state.go($rootScope.lastTabsState.pop()); }, 101);
 
             //restore default behaviour for other controllers
             $scope.$on('destroy', function() {
@@ -470,7 +475,11 @@ angular.module('starter.services', [])
 
         showTablessView: function (newState, routingParameters) {
             
-            $rootScope.lastTabsState = $ionicHistory.currentView().stateId;
+            console.log(newState);
+
+            $rootScope.lastTabsState = $rootScope.lastTabsState || [];
+
+            $rootScope.lastTabsState.push($ionicHistory.currentView().stateId);
             
             if (newState) {
                 $state.go(newState, routingParameters);

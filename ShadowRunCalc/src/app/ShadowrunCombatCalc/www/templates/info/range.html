@@ -1,0 +1,30 @@
+﻿
+
+
+<ion-view view-title="Range Table">
+    <ion-content class="animated fadeIn" style="font-size:.6rem;">
+
+        <div class="row header grid-header-row">
+            <div class="col">Weapon</div>
+            <div class="col">Short</div>
+            <div class="col">Medium</div>
+            <div class="col">Long</div>
+            <div class="col">Extreme</div>
+        </div>
+        <div ng-repeat="data in datas" class="row grid-alternating-row">
+
+            <div ng-if="data.length==1" class="col col-100 grid-sub-header-row">{{data[0]}}</div>
+
+            <div ng-if="data.length>1" class="col">{{data[0]}}</div>
+            <div ng-if="data.length>1" class="col">{{data[1]}}</div>
+            <div ng-if="data.length>1" class="col">{{data[2]}}</div>
+            <div ng-if="data.length>1" class="col">{{data[3]}}</div>
+            <div ng-if="data.length>1" class="col">{{data[4]}}</div>
+        </div>
+
+                
+
+    </ion-content>
+        
+
+</ion-view>

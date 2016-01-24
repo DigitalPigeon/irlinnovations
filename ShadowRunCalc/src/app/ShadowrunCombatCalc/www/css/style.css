@@ -1,5 +1,6 @@
 /* Empty. Add your own CSS if you like */
 
+
 .checkbox input, .checkbox-icon {
   display: inline-block;
   vertical-align: middle;
@@ -44,4 +45,36 @@
 }
 .header-item.buttons {
     transition-duration: 0ms;
+}
+
+.col-100 {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 100%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 100%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%; }
+
+.grid-alternating-row { 
+    background: gray; 
+    color:white;
+    padding:0px; 
+
+}
+
+.grid-alternating-row:nth-child(odd) { 
+    background: black; 
+    color:white;
+    padding:0px; 
+}
+
+.grid-sub-header-row {
+    background: gold;     
+    color:black;
+}
+
+.grid-header-row {
+    background: black;    
+    color:gold;
 }

@@ -1,20 +1,32 @@
-<!-- if a name isn't passed in, don't even bother rendering the header -->
-<div ng-if="isModifierApplicable(items)">
-    <h3 ng-if="name!=''">{{name}}</h3>
 
     <!-- Inline selections -->
-    <ion-list ng-if="!popout">
-        <ion-item ng-repeat="item in items" class="row-no-padding row-no-side-border" ng-if="isModifierApplicable(item)" ng-click="checkForSubPopout(item); validateSelection(item, true); $event.stopPropagation(); goBackIfRequired();" >
-            <label class=" checkbox">
-                <input type="checkbox" ng-click="checkForSubPopout(item); validateSelection(item); $event.stopPropagation(); goBackIfRequired();" ng-model="item.checked">
-                {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
-            </label>
-        </ion-item>
-    </ion-list>
+    <div class="list" ng-if="isModifierApplicable(items)" >
 
-    <!-- Popout selections -->
-    <modifier-popout-block name="{{name}}" item-service-name="{{itemServiceName}}" ng-if="popout"></modifier-popout-block>
+        <!-- if a name isn't passed in, don't even bother rendering the header -->
+        <div class="item item-button-right list-divider row-no-top-border row-no-side-border" ng-if="name!=''">
+            <h3>{{name}}</h3>
+            <button class="button button-dark" ng-show="infoPageState" ng-click="showTablessView(infoPageState); ">
+                <i class="icon ion-help"></i>
+            </button>
+        </div>
+
+        <a ng-repeat="item in items" class="item item-icon-left row-no-side-border" ng-if="!popout && isModifierApplicable(item)" ng-click="checkForSubPopout(item); validateSelection(item, true); goBackIfRequired();">
+            {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+            <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
+            <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
+        </a>
+
+
+        <!-- Popout selections -->
+        <a class="item item-icon-left row-no-side-border" ng-if="popout" ng-click="showTablessView('app.popout', {name: name, itemServiceName: itemServiceName}); ">
+            {{item.name}} <small>{{formatStats(item, '(', ')', ', ')}}</small>
+            <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
+            <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
+        </a>
+
+        <br />
+
+    </div>
     
-    <br />
+        
 
-</div>

@@ -12,19 +12,6 @@ angular.module('starter.directives', [])
     };
 })
 
-.directive('modifierPopoutBlock', function () {
-    return {
-        restrict: 'E',
-        controller: 'ModifierBlockCtrl',
-        scope: {
-            item: '=',
-            itemServiceName: '@',
-            name: '@'
-        },
-        templateUrl: 'templates/common/modifierPopoutBlock.html',
-    };
-})
-
 .directive('irlIonHr', function () {
     return {
         restrict: 'E',                
