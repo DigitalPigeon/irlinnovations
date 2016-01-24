@@ -119,7 +119,7 @@ angular.module('starter.controllers', [])
     $scope.popout = false;
 
     //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
-    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && $scope.name) {
+    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && $scope.name && !$scope.blockPopout) {
         
         //exclusive group found. Default to using popout unless not all options are exclusive
         $scope.popout = true;

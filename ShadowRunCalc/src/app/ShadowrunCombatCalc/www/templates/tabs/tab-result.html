@@ -1,48 +1,55 @@
 <ion-view view-title="{{attackType.name}} Attack Results">
-    <ion-content class="padding animated" ng-class="tabAnimation">
+    <ion-content class="animated" ng-class="tabAnimation">
         
-        <h3>Att Pool: <irl-signed-number value="attackerPoolTotal"></irl-signed-number></h3>
-        <ion-list  >            
-            <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} 
-                    {{formatStats(modifier, '(', ')', ', ', 'Att')}}                    
-                    <span ng-if="modifier.attackerPoolCap!=null"> *Capped</span>
-                </small>
-            </ion-item>
-        </ion-list>
+        <div class="card ">
+            <div class="item item-divider">Att Pool: <irl-signed-number value="attackerPoolTotal"></irl-signed-number></div>
+            <ion-list>
+                <ion-item ng-repeat="modifier in selectedAttackerPoolModifiers" class="row-no-top-padding row-no-bottom-padding row-no-border">
+                    <small>
+                        {{modifier.name}}
+                        {{formatStats(modifier, '(', ')', ', ', 'Att')}}
+                        <span ng-if="modifier.attackerPoolCap!=null"> *Capped</span>
+                    </small>
+                </ion-item>
+            </ion-list>
+        </div>        
                 
-        <irl-ion-hr></irl-ion-hr>
-        
+        <div class="card ">
+            <div class="item item-divider">Def Pool: <irl-signed-number value="defenderPoolTotal"></irl-signed-number></div>
+            <ion-list>
+                <ion-item ng-repeat="modifier in selectedDefenderPoolModifiers" class="row-no-top-padding row-no-bottom-padding row-no-border">
+                    <small>
+                        {{modifier.name}}
+                        {{formatStats(modifier, '(', ')', ', ', 'Def')}}
+                    </small>
+                </ion-item>
+            </ion-list>
+        </div>
+            
+        <div class="card ">
+            <div class="item item-divider">DV: <irl-signed-number value="dvTotal"></irl-signed-number></div>
+            <ion-list>
+                <ion-item ng-repeat="modifier in selectedDvModifiers" class="row-no-top-padding row-no-bottom-padding row-no-border">
+                    <small>
+                        {{modifier.name}}
+                        {{formatStats(modifier, '(', ')', ', ', 'DV')}}
+                    </small>
+                </ion-item>
+            </ion-list>
+        </div>
 
-        <h3>Def Pool: <irl-signed-number value="defenderPoolTotal"></irl-signed-number></h3>
-        <ion-list>
-            <ion-item ng-repeat="modifier in selectedDefenderPoolModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} 
-                    {{formatStats(modifier, '(', ')', ', ', 'Def')}}</small>                    
-            </ion-item>
-        </ion-list>
-        
-        <irl-ion-hr></irl-ion-hr>
+        <div class="card ">
+            <div class="item item-divider">AP: <irl-signed-number value="apTotal"></irl-signed-number></div>
+            <ion-list>
+                <ion-item ng-repeat="modifier in selectedApModifiers" class="row-no-top-padding row-no-bottom-padding row-no-border">
+                    <small>
+                        {{modifier.name}}
+                        {{formatStats(modifier, '(', ')', ', ', 'AP')}}
+                    </small>
+                </ion-item>
+            </ion-list>
+        </div>
 
-        <h3>DV: <irl-signed-number value="dvTotal"></irl-signed-number></h3>
-        <ion-list  >
-            <ion-item ng-repeat="modifier in selectedDvModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} 
-                    {{formatStats(modifier, '(', ')', ', ', 'DV')}}</small>                    
-            </ion-item>
-        </ion-list>
 
-        <irl-ion-hr></irl-ion-hr>
-
-        <h3>AP: <irl-signed-number value="apTotal"></irl-signed-number></h3>
-        <ion-list  >
-            <ion-item ng-repeat="modifier in selectedApModifiers" class="row-no-padding row-no-border">
-                <small>{{modifier.name}} 
-                    {{formatStats(modifier, '(', ')', ', ', 'AP')}}</small>                    
-            </ion-item>
-        </ion-list>
-
-        
-        
-    </ion-content>
+</ion-content>
 </ion-view>

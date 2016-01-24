@@ -6,7 +6,8 @@ angular.module('starter.directives', [])
         controller: 'ModifierBlockCtrl',
         scope: {
             itemServiceName: '@',
-            name: '@'
+            name: '@',
+            blockPopout: '='
         },
         templateUrl: 'templates/common/modifierBlock.html'
     };
