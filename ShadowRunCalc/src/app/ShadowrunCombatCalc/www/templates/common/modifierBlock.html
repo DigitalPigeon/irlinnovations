@@ -3,7 +3,7 @@
     <div class="list" ng-if="isModifierApplicable(items)" >
 
         <!-- if a name isn't passed in, don't even bother rendering the header -->
-        <div class="item item-button-right list-divider row-no-top-border row-no-side-border" style="padding-bottom:10px;" ng-if="name!=''">
+        <div class="item item-button-right list-divider row-no-top-border row-no-side-border" style="padding-bottom:10px;" ng-if="name">
             <b>{{name}}</b>
             <button class="button button-dark" ng-show="infoPageState" ng-click="showTablessView(infoPageState); ">
                 <i class="icon ion-help"></i>
