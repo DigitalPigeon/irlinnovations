@@ -31,12 +31,12 @@ angular.module('starter.data', [])
 .factory('martialArts', function () {
 
     var options = [
-            { id: 17, name: 'Finishing Move', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, edge: 1, initiative: -10, melee: true, notes: 'Once per combat turn.' },
-            { id: 18, name: 'Flying Kick', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, reach: 1, melee: true, notes: 'Requires move from at least 1m. If uncessfull, suffer -1 defence tests until next phase.' },
-            { id: 19, name: 'Full Offence', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, initiative: -5, melee: true, notes: 'No defensive interupts until next action phase.' },
-            { id: 20, name: 'Half Sword', ap: 2, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, notes: 'Blades only. Requires two hands. -2 on next non-defense action if this attack fails.' },
-            { id: 21, name: 'Haymaker', ap: 2, dv: 1, attackerPool: 0, defenderPool: 2, melee: true },
-            { id: 22, name: 'Pouncing Dragon', ap: 2, dv: 1, attackerPool: 0, defenderPool: 2, melee: true, notes: 'Requires superior position or the target being prone.' }            
+            { id: 17, name: 'Finishing Move', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, edge: 1, initiative: -10, melee: true, exclusiveGroup: 'action', notes: 'Once per combat turn.' },
+            { id: 18, name: 'Flying Kick', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, reach: 1, melee: true, exclusiveGroup: 'action', notes: 'Requires move from at least 1m. If uncessfull, suffer -1 defence tests until next phase.' },
+            { id: 19, name: 'Full Offence', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, initiative: -5, melee: true, exclusiveGroup: 'action', notes: 'No defensive interupts until next action phase.' },
+            { id: 20, name: 'Half Sword', ap: 2, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, exclusiveGroup: 'action', notes: 'Blades only. Requires two hands. -2 on next non-defense action if this attack fails.' },
+            { id: 21, name: 'Haymaker', ap: 0, dv: 1, attackerPool: 0, defenderPool: 2, melee: true, exclusiveGroup: 'action', },
+            { id: 22, name: 'Pouncing Dragon', ap: 0, dv: 2, attackerPool: 0, defenderPool: 0, melee: true, exclusiveGroup: 'action', notes: 'Requires superior position or the target being prone.' }
     ];
 
     return {

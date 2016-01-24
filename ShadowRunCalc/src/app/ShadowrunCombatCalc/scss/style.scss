@@ -88,3 +88,16 @@
     background: $stable;    
     color: $dark;
 }
+
+span.line {
+  display: inline-block;
+}
+
+.icon-smaller::before {
+    font-size: smaller;
+}
+
+.icon-x-small::before {
+    font-size: x-small;
+}
+

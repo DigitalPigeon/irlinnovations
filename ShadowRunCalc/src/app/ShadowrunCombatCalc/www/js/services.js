@@ -20,57 +20,21 @@ angular.module('starter.services', [])
         }
     })
 
-.factory('modifiersService', ['attackerSituations', 'firingModes', 'choke', 'defenderSituations', 'coverService',
-                                'equipmentService', 'ammoTypes', 
-                                'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
-                                'attackTypeService', 
-                                '$filter', '$ionicPopup', '$state', '$injector',
-                                function (attackerSituations, firingModes, choke, defenderSituations, coverService,
-                                            equipmentService, ammoTypes,
-                                            visibilityModifiers, lightModifiers, windModifiers, rangeModifiers,
-                                            attackTypeService,
-                                            $filter, $ionicPopup, $state, $injector) {
+.factory('modifiersService', [  'attackTypeService', '$filter', '$ionicPopup', '$state', '$injector',
+                                function (attackTypeService, $filter, $ionicPopup, $state, $injector) {
         return {
             
-
-            dynamicLoad: function() {
-                var module = angular.module('starter.data');
-
-                console.log(module);
-
-                angular.forEach(module._invokeQueue, function(serviceInvoker, key){
-                    console.log(serviceInvoker);
-                    var service = $injector.get(serviceInvoker[2][0]);
-                    console.log(service.all().length);
-                });
-            },
-
             all: function () {
 
+                var module = angular.module('starter.data');
                 var modifiers = [];
                 
-                angular.forEach(attackerSituations.all(), function(value, key) {modifiers.push(value);});
-
-                angular.forEach(firingModes.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(choke.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(equipmentService.all(), function (value, key) { modifiers.push(value); });
-
-                angular.forEach(ammoTypes.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(defenderSituations.all(), function (value, key) {modifiers.push(value);});
+                //include every factory from the data module
+                angular.forEach(module._invokeQueue, function (serviceInvoker, key) {
+                    var service = $injector.get(serviceInvoker[2][0]);
+                    angular.forEach(service.all(), function (value, key) { modifiers.push(value); });                    
+                });               
                 
-                angular.forEach(coverService.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(visibilityModifiers.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(lightModifiers.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(windModifiers.all(), function (value, key) {modifiers.push(value);});
-
-                angular.forEach(rangeModifiers.all(), function (value, key) {modifiers.push(value);});
-
                 return modifiers;
             },
 
@@ -219,19 +183,9 @@ angular.module('starter.services', [])
                 service = this;
                 var recursiveCallers = [];
 
+                //wrapper function to confine scope
                 var recurse = function (itemToRecurse) {
-                    service.validateSelection(itemToRecurse);
-                    /*
-                    if (!$filter('filter')(this.recursiveCallers, function(recursiveCaller) {itemToRecurse == recursiveCaller}))
-                    {
-                        console.log('recurse ' + itemToRecurse.name)
-                        recursiveCallers.push(currentSelection);
-                        service.validateSelection(itemToRecurse, null, recursiveCallers);
-                    }
-                    {
-                        console.log('do not recurse ' + itemToRecurse.name)
-                    }
-                    */
+                    service.validateSelection(itemToRecurse);                    
                 };
 
                 var allSelected = service.selected();
@@ -464,8 +418,7 @@ angular.module('starter.services', [])
             },
         
         enable: function ($scope) {            
-            $scope.$on('$ionicView.beforeEnter', function (event, viewData) {                
-                console.log('viewData.enableBack = true');
+            $scope.$on('$ionicView.beforeEnter', function (event, viewData) {                                
                 viewData.enableBack = true;
             });
                        
@@ -488,18 +441,11 @@ angular.module('starter.services', [])
 
         showTablessView: function (newState, routingParameters) {
             
-            console.log(newState);
-
             $rootScope.lastTabsState = $rootScope.lastTabsState || [];
 
             $rootScope.lastTabsState.push($ionicHistory.currentView().stateId);
             
-            if (newState) {
-                $state.go(newState, routingParameters);
-            } else {
-                console.log('New state was not specified!');
-                $state.go('');
-            }
+            $state.go(newState, routingParameters);           
             
         }
     };

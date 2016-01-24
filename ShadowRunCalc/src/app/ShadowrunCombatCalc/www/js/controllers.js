@@ -62,8 +62,6 @@ angular.module('starter.controllers', [])
 
     $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(4); });
 
-    modifiersService.dynamicLoad();
-
     var rebind = function() {
         //$scope.selectedModifiers = modifiersService.selected;
 
@@ -155,6 +153,15 @@ angular.module('starter.controllers', [])
             tablessStateService.goBack();
         }
     };
+
+
+    $scope.showNotes = function (notes) {        
+        $ionicPopup.show({
+            title: 'Notes',
+            template: notes,
+            buttons: [{ text: 'Got it!', type: 'button-positive' }],
+        });
+    }
 
     $scope.showTablessView = tablessStateService.showTablessView;
     $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
