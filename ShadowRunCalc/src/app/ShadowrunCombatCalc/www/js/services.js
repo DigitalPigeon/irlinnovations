@@ -24,13 +24,26 @@ angular.module('starter.services', [])
                                 'equipmentService', 'ammoTypes', 
                                 'visibilityModifiers','lightModifiers','windModifiers','rangeModifiers',
                                 'attackTypeService', 
-                                '$filter', '$ionicPopup', '$state',
+                                '$filter', '$ionicPopup', '$state', '$injector',
                                 function (attackerSituations, firingModes, choke, defenderSituations, coverService,
                                             equipmentService, ammoTypes,
                                             visibilityModifiers, lightModifiers, windModifiers, rangeModifiers,
                                             attackTypeService,
-                                            $filter, $ionicPopup, $state) {
+                                            $filter, $ionicPopup, $state, $injector) {
         return {
+            
+
+            dynamicLoad: function() {
+                var module = angular.module('starter.data');
+
+                console.log(module);
+
+                angular.forEach(module._invokeQueue, function(serviceInvoker, key){
+                    console.log(serviceInvoker);
+                    var service = $injector.get(serviceInvoker[2][0]);
+                    console.log(service.all().length);
+                });
+            },
 
             all: function () {
 

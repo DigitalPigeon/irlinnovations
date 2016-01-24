@@ -62,6 +62,8 @@ angular.module('starter.controllers', [])
 
     $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(4); });
 
+    modifiersService.dynamicLoad();
+
     var rebind = function() {
         //$scope.selectedModifiers = modifiersService.selected;
 
