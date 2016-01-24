@@ -46,6 +46,21 @@ angular.module('starter.data', [])
     };
 })
 
+.factory('adeptPowers', function () {
+
+    var options = [
+            { id: 17, name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true },
+            { id: 18, name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple:true  }
+            
+    ];
+
+    return {
+        all: function () {
+            return options;
+        }
+    };
+})
+
 .factory('firingModes', function () {
 
     var options = [
