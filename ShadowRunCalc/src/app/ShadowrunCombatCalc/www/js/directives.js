@@ -7,7 +7,8 @@ angular.module('starter.directives', [])
         scope: {
             itemServiceName: '@',
             name: '@',
-            blockPopout: '='
+            blockPopout: '=',
+            alwaysApplicable: '='
         },
         templateUrl: 'templates/common/modifierBlock.html'
     };

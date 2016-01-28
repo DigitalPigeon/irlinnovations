@@ -1,8 +1,51 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, tablessStateService, tabAnimationService) {
+.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, db, domainCharacter) {
 
-    //all attack type services for binding
+    $scope.workflowStates = ['app.start','app.attack','app.target','app.environment','app.result'];
+    $scope.startState = $scope.workflowStates[0];
+
+    $scope.previousWorkflowState = function() {
+
+        var currentState = $ionicHistory.currentStateName();
+
+        var previousState = null;
+
+        for (var index=0; index < $scope.workflowStates.length; index++)
+        {
+            if ($scope.workflowStates[index] == currentState) {
+                return previousState;
+            }
+            previousState = $scope.workflowStates[index];
+        }
+
+        return previousState;
+    }
+
+    $scope.nextWorkflowState = function() {
+
+        var currentState = $ionicHistory.currentStateName();
+        
+        var matched = false;
+
+        for (var index=0; index < $scope.workflowStates.length; index++)
+        {
+            //the last loop found the match, so this is the next state
+            if (matched) {
+                return $scope.workflowStates[index];
+            }
+
+            if ($scope.workflowStates[index] == currentState) {
+                matched = true;
+            }
+        }
+        
+        //nothing matched, so there is no next state
+        return null;
+    }
+
+
+            //all attack type services for binding
     $scope.rangedAttackType = attackTypeService.rangedAttackType;
     $scope.meleeAttackType = attackTypeService.meleeAttackType;
     $scope.attackType = attackTypeService.attackType;
@@ -12,32 +55,44 @@ angular.module('starter.controllers', [])
         attackTypeService.changeAttackType(newAttackType);
     };
 
-    $scope.showTablessView = tablessStateService.showTablessView;
-    $scope.enableTablessView = tablessStateService.enable;
+    $scope.show = function(state) { $state.go(state); };
 
-    $scope.goHome = function () { $state.go('app.tab.attack'); }
+    $scope.startOver=function() {
+        $ionicHistory.clearHistory();
 
-    $scope.reset = function () {
+        $ionicHistory.nextViewOptions({
+            disableAnimate: false,
+            disableBack: true
+        });
+
+        $state.go($scope.startState);
+    };
+    
+    $scope.reset = function (clearStorage) {
         $ionicPopup.confirm({
             title: 'Reset Everything?',
-            template: 'Are you sure you want to reset all options?'
+            template: 'Are you sure you want to reset all items' + (clearStorage?' AND saved data?':'?')
         })
         .then(function (result) {
             if (result) {
                 modifiersService.reset();
+
+                if (clearStorage) {
+                    db.reset();
+                }
+                $scope.startOver();
             } 
         });
     };
 
-    //manage tab direction
-    $scope.getTransition = tabAnimationService.getTransition;
+    
 
+})
 
-        })
+.controller('StartCtrl', function($scope) {
+})
 
 .controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {
-
-    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(1); });
 
     //watch for change to attack type, if it occurs scroll to the top
     //this is important because melee is smaller than ranged, and can actually be scrolled
@@ -51,16 +106,12 @@ angular.module('starter.controllers', [])
 })
 
 .controller('TargetCtrl', function ($scope) {
-    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(2); });
 })
 
 .controller('EnvironmentCtrl', function ($scope) {
-    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(3); });
 })
 
 .controller('ResultCtrl', function ($scope, $stateParams, modifiersService) {
-
-    $scope.$on('$ionicNavView.beforeLeave', function () { $scope.tabAnimation = $scope.getTransition(4); });
 
     var rebind = function() {
         //$scope.selectedModifiers = modifiersService.selected;
@@ -91,24 +142,17 @@ angular.module('starter.controllers', [])
 
 
 .controller('MyCharacterCtrl', function ($scope) {
-    $scope.enableTablessView($scope);    
 })
 
 
 
 .controller('PopoutCtrl', function ($scope, $stateParams) {
-
-    //$scope.$on('$ionicView.enter', function () {        
-    //    $scope.enableTablessView($scope);
-    //});
-
-    $scope.enableTablessView($scope);
     $scope.name = $stateParams.name;
     $scope.itemServiceName = $stateParams.itemServiceName;
 
 })
 
-.controller('ModifierBlockCtrl', function ($scope, $injector, $ionicPopup, modifiersService, tablessStateService, attackTypeService) {
+.controller('ModifierBlockCtrl', function ($rootScope, $scope, $state, $injector, $ionicPopup, modifiersService, attackTypeService) {
 
     var itemService = $injector.get($scope.itemServiceName);
 
@@ -147,12 +191,7 @@ angular.module('starter.controllers', [])
                 $scope.item = newItem || { name: 'None Selected', checked: false }});
     }
         
-    //if a section name is supplied, assume this is shown inline. if there is no name, then assume we are modal
-    $scope.goBackIfRequired = function () {                
-        if (!$scope.name) {
-            tablessStateService.goBack();
-        }
-    };
+    
 
 
     $scope.showNotes = function (notes) {        
@@ -163,8 +202,20 @@ angular.module('starter.controllers', [])
         });
     }
 
-    $scope.showTablessView = tablessStateService.showTablessView;
-    $scope.isModifierApplicable = attackTypeService.isModifierApplicable;
+    $scope.showInfoPage = function (infoPageState) {
+        $state.go(infoPageState);
+    }
+
+    
+
+    $scope.goBackIfRequired = function() {
+        if (!$scope.name) {
+            $rootScope.$ionicGoBack();
+        }
+    };
+
+
+    $scope.isModifierApplicable = function(modifiers) { return $scope.alwaysApplicable || attackTypeService.isModifierApplicable(modifiers) ; }
     $scope.formatStats = modifiersService.formatStats;
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }
 
@@ -172,7 +223,7 @@ angular.module('starter.controllers', [])
 
 .controller('InfoRangeCtrl', function ($scope) {
 
-    $scope.enableTablessView($scope);
+    
 
     $scope.datas = 
         [

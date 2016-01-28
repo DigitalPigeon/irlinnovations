@@ -1,6 +1,7 @@
 <ion-view view-title="{{attackType.name}} Environment">
     
-    <ion-content class="animated" ng-class="tabAnimation">
+    <ion-content class=" padding animated" on-swipe-right="show(previousWorkflowState())" on-swipe-left="show(nextWorkflowState())"  >
+        
         
         <modifier-block name="Visibility" item-service-name="visibilityModifiers"></modifier-block>
 
@@ -10,7 +11,7 @@
 
         <modifier-block name="Range" item-service-name="rangeModifiers" ></modifier-block>                    
               
-      
+        <button class="button button-dark button-full" type="button" ng-click="show(nextWorkflowState())" >Next</button>                
 
     </ion-content>
 </ion-view>

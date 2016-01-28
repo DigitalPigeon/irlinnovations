@@ -1,5 +1,5 @@
 <ion-view view-title="{{attackType.name}} Attack Results">
-    <ion-content class="padding animated " ng-class="tabAnimation">
+    <ion-content class=" padding animated" on-swipe-right="show(previousWorkflowState())"   >
         
         <div class="card ">
             <div class="item item-divider">Att Pool: <irl-signed-number value="attackerPoolTotal"></irl-signed-number></div>
@@ -49,7 +49,10 @@
                 </ion-item>
             </ion-list>
         </div>
+        
+        <button class="button button-dark button-full" type="button" ng-click="startOver()">Do it again!</button>                
+        
+        <button class="button button-dark button-full" type="button" ng-click="reset(false)">Clear everything and try again!</button>     
 
-
-</ion-content>
+    </ion-content>
 </ion-view>

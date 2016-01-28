@@ -181,20 +181,16 @@ angular.module('starter.services', [])
             validateSelection: function (currentSelection, toggleCurrentSelection) {
                 
                 service = this;
-                var recursiveCallers = [];
-
+                
                 //wrapper function to confine scope
                 var recurse = function (itemToRecurse) {
                     service.validateSelection(itemToRecurse);                    
                 };
 
-                var allSelected = service.selected();
                 var all = service.all();
 
                 var filteredResults;                            
-
-                var recusive = function (c, t) { return validateSelection(c, t); }
-
+                
                 //if toggle current selection, then we need to change this items checked state
                 if (toggleCurrentSelection)
                 {

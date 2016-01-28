@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.data', 'starter.directives'])
+angular.module('starter', ['ionic', 'starter.db', 'starter.domain', 'starter.controllers', 'starter.services', 'starter.data', 'starter.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -31,7 +31,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     //routes  
     $stateProvider
-    
+
     //slide out menu
     .state('app', {
         url: '/app',
@@ -39,61 +39,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         templateUrl: 'templates/menu.html',
         controller: 'AppCtrl'
     })
-
-
-    //tab layout
-      .state('app.tab', {
-          url: '/tab',
-          views:
-              {
-                  'menuContent': { templateUrl: 'templates/tabs/tabs.html' }
-              }
-
-      })
-
-    //tab - attack
-    .state('app.tab.attack', {
-        url: '/attack',
-        views: {
-            'tab-attack': {
-                templateUrl: 'templates/tabs/tab-attack.html',
-                controller: 'AttackCtrl'
-            }
-        }
-    })
-
-    //tab - target
-    .state('app.tab.target', {
-        url: '/target',
-        views: {
-            'tab-target': {
-                templateUrl: 'templates/tabs/tab-target.html',
-                controller: 'TargetCtrl'
-            }
-        }
-    })
-
-    //tab environment
-    .state('app.tab.environment', {
-        url: '/environment',
-        views: {
-            'tab-environment': {
-                templateUrl: 'templates/tabs/tab-environment.html',
-                controller: 'EnvironmentCtrl'
-            }
-        }
-    })
-
-   //tab result
-  .state('app.tab.result', {
-      url: '/result',
-      views: {
-          'tab-result': {
-              templateUrl: 'templates/tabs/tab-result.html',
-              controller: 'ResultCtrl'
-          }
-      }
-  })
         
     //stand alone pages
 
@@ -143,7 +88,57 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             }
         }
     }) 
-      
+
+    //workflows
+    .state('app.start', {
+        url: '/app/start',
+        views: {
+            'menuContent': {
+                    templateUrl: 'templates/workflow/start.html',
+                    controller: 'StartCtrl'
+                }
+            }
+        })
+
+    .state('app.attack', {
+        url: '/app/attack',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/workflow/attack.html',
+                controller: 'AttackCtrl'
+            }
+        }
+    })
+
+    .state('app.target', {
+        url: '/app/target',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/workflow/target.html',
+                controller: 'TargetCtrl'
+            }
+        }
+    })
+
+    .state('app.environment', {
+        url: '/app/environment',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/workflow/environment.html',
+                controller: 'EnvironmentCtrl'
+            }
+        }
+    })
+
+    .state('app.result', {
+        url: '/app/result',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/workflow/result.html',
+                controller: 'ResultCtrl'
+            }
+        }
+    })
 
     ;
   

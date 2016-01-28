@@ -1,9 +1,11 @@
 <ion-view view-title="{{attackType.name}} Target">
-    <ion-content class="animated" ng-class="tabAnimation" >
+    <ion-content class=" padding animated" on-swipe-right="show(previousWorkflowState())" on-swipe-left="show(nextWorkflowState())"  >
+         
+
         <modifier-block name="Defender's Situation" item-service-name="defenderSituations"></modifier-block>
 
         <modifier-block name="Cover" item-service-name="coverService"></modifier-block>
               
-
+        <button class="button button-dark button-full" type="button" ng-click="show(nextWorkflowState())" >Next</button>                         
     </ion-content>
 </ion-view>

@@ -1,5 +1,5 @@
-﻿<ion-side-menus enable-menu-with-back-views="false">
-    <ion-side-menu-content>
+﻿<ion-side-menus enable-menu-with-back-views="true" enable-back-views="false">
+    <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-stable">
             <ion-nav-back-button>
             </ion-nav-back-button>
@@ -16,29 +16,24 @@
             </ion-header-bar>
             <ion-content>
                 <ion-list>
-                    <ion-item menu-close ng-click="changeAttackType('{{rangedAttackType}}')"  >
-                        Ranged Attack
-                    </ion-item>
-                </ion-list>
-                <ion-list>
-                    <ion-item menu-close ng-click="changeAttackType('{{meleeAttackType}}')"   >
-                        Melee Attack
-                    </ion-item>
-                </ion-list>                
-                <ion-list>
-                    <ion-item menu-close ng-click="showTablessView('app.myCharacter')">
+                    <ion-item menu-close class="item-text-wrap" ng-click="show('app.myCharacter')" >
                         My Character
                     </ion-item>
-                </ion-list>                
-                <ion-item class=" list-divider"></ion-item>
-                <ion-list>
-                    <ion-item menu-close ng-click="reset()">
-                        Reset Everything
+                    
+                    <ion-item class=" list-divider"></ion-item>
+                    <ion-item menu-close ng-href="#/workflow/start" >
+                        Start Over
                     </ion-item>
-                </ion-list>
-                <ion-item class=" list-divider"></ion-item>
-                <ion-list>
-                    <ion-item menu-close ng-click="showTablessView('app.welcome')">
+                    <ion-item menu-close nav-clear class="item-text-wrap" ng-click="reset(false)" >
+                        Clear Selections and Start Over
+                    </ion-item>
+                    <ion-item menu-close nav-clear class="item-text-wrap" ng-click="reset(true)" >
+                        Clear Saved Data and Start Over
+                    </ion-item>
+                    
+                    <ion-item class=" list-divider"></ion-item>
+                    
+                    <ion-item menu-close ng-href="#/app/welcome">
                         About
                     </ion-item>
                 </ion-list>

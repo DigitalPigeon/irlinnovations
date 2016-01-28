@@ -1,16 +1,15 @@
-
     <!-- Inline selections -->
     <div class="list" ng-if="isModifierApplicable(items)" >
 
         <!-- if a name isn't passed in, don't even bother rendering the header -->
         <div class="item item-icon-right list-divider row-no-top-border row-no-side-border" style="padding-bottom:10px;" ng-if="name">
             <b>{{name}}</b>
-            <a ng-show="infoPageState" ng-click="showTablessView(infoPageState); ">
+            <a ng-show="infoPageState" ng-click="showInfoPage(infoPageState)">
                 <i class="icon ion-help positive icon-smaller"></i>
             </a>
         </div>
 
-        <a ng-repeat="item in items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!popout && isModifierApplicable(item)" ng-click="checkForSubPopout(item); validateSelection(item, true); goBackIfRequired();">
+        <a ng-repeat="item in items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfRequired();">
             <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
             <small>                
@@ -22,7 +21,7 @@
 
 
         <!-- Popout selections -->
-        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="popout"  ng-click="showTablessView('app.popout', {name: name, itemServiceName: itemServiceName}); ">
+        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="popout"  ui-sref="app.popout({name: name, itemServiceName: itemServiceName})">
             <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
             <small>
