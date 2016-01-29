@@ -259,7 +259,7 @@ angular.module('starter.services', [])
                 //picking a multi selecter requires the user to provide a multiplier
                  if (currentSelection.allowMultiple) {
                      if (currentSelection.checked) {
-                         $ionicPopup.prompt({ title: currentSelection.name, inputType:'number' })
+                         $ionicPopup.prompt({ title: 'Ranks / Levels of ' +  currentSelection.name + '?', inputType:'number' })
                              .then(function(result) {
                                  if (result && currentSelection.multiplier != result) {
                                      currentSelection.multiplier = result;
@@ -268,7 +268,6 @@ angular.module('starter.services', [])
                                  else if (!result && (currentSelection.checked || currentSelection.multiplier)) {
                                      currentSelection.checked = false;
                                      currentSelection.multiplier = null;
-                                     recurse(value);
                                  }
                              });
                          } else {
@@ -344,7 +343,8 @@ angular.module('starter.services', [])
                 addStat('AP', item.ap, item.multiplier);
 
                 if (stats.length > 0) {
-                    return prefix + (item.multiplier?'x' + item.multiplier + ' = ':'') + stats.join(seperator) + suffix;
+                    //return prefix + (item.multiplier?'x' + item.multiplier + ' = ':'') + stats.join(seperator) + suffix;
+                    return prefix + stats.join(seperator) + suffix;
                 } else {
                     return '';
                 }

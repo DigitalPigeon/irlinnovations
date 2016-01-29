@@ -56,7 +56,7 @@ angular.module('starter.controllers', [])
         attackTypeService.changeAttackType(newAttackType);
     };
 
-    $scope.show = function (state, config) { $state.go(state, config); };
+    $scope.show = function (state, config, options) { $state.go(state, config, options); };
 
     $scope.startOver=function() {
         $ionicHistory.clearHistory();
@@ -66,7 +66,7 @@ angular.module('starter.controllers', [])
             disableBack: true
         });
 
-        $state.go($scope.startState);
+        $state.go($scope.startState,null, {reload:true});
     };
     
     $scope.reset = function (clearStorage) {
@@ -101,8 +101,7 @@ angular.module('starter.controllers', [])
     var rebind = function() {
         $scope.characters = domainCharacter.retrieveAll();        
     };
-            
-
+    
     $scope.$on('$ionicView.enter', function() {
         rebind();
     });
