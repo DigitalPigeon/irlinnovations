@@ -8,8 +8,6 @@ angular.module('starter.controllers', [])
     $scope.$on('$ionicView.enter', function() {
         $scope.activeCharacter = character.character();
     });
-
-    //$scope.$watch(function() { return character.character(); }, function() { console.log('Watch'); $scope.character = character.character(); });
     
     $scope.previousWorkflowState = function() {
 
@@ -219,7 +217,6 @@ angular.module('starter.controllers', [])
 
     
     $scope.$watch(function() { return character.character(); }, function(newVal, oldVal) {
-        console.log('stuff changed!');
         $scope.character = character.character();
     });
 
@@ -234,9 +231,8 @@ angular.module('starter.controllers', [])
 
 .controller('ModifierBlockCtrl', function ($rootScope, $scope, $state, $injector, $ionicPopup, modifiersService, attackTypeService) {
 
-    $scope.$on('$ionicView.enter', function() {
-        console.log('Modifier Block for ' + $scope.name);
-    });
+    //$scope.$on('$ionicView.enter', function() {
+    //});
 
     var itemService = $injector.get($scope.itemServiceName);
 
