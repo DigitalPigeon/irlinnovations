@@ -32,6 +32,7 @@ angular.module('starter.data', [])
 
     var newCharacter = function() {
         return {
+            initialized: true,
             name: '',
             agility: 0,
             strength: 0,
@@ -45,11 +46,14 @@ angular.module('starter.data', [])
         };
     };
 
-    var character = newCharacter();
+    var character = {initialized: false};
     
     return {
         all: function () {
-            return character.options;
+            if (character)
+            {return character.options;} else {
+                return [];
+            }
         },
         character: function () {
             return character;
@@ -57,6 +61,9 @@ angular.module('starter.data', [])
         createNewCharacter: function () {
             character = newCharacter();
             return character;
+        },
+        uninitialize: function() {
+            character.initialized = false;
         }
     };
 })

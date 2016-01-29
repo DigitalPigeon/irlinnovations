@@ -1,10 +1,16 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, db, domainCharacter) {
+.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, db, character) {
 
     $scope.workflowStates = ['app.characterSelection', 'app.action','app.attack','app.target','app.environment','app.result'];
     $scope.startState = $scope.workflowStates[0];
+    
+    $scope.$on('$ionicView.enter', function() {
+        $scope.activeCharacter = character.character();
+    });
 
+    //$scope.$watch(function() { return character.character(); }, function() { console.log('Watch'); $scope.character = character.character(); });
+    
     $scope.previousWorkflowState = function() {
 
         var currentState = $ionicHistory.currentStateName();
@@ -77,6 +83,7 @@ angular.module('starter.controllers', [])
         .then(function (result) {
             if (result) {
                 modifiersService.reset();
+                character.uninitialize();
 
                 if (clearStorage) {
                     db.reset();
@@ -115,6 +122,23 @@ angular.module('starter.controllers', [])
         domainCharacter.retrieveInto(name, character.character());
         $scope.goNextWorkflowState();
     };
+
+    $scope.isActiveCharacter = function(characterToCheck) {
+        if (characterToCheck && $scope.activeCharacter && $scope.activeCharacter.initialized)
+        {
+            if (characterToCheck.name == $scope.activeCharacter.name) {
+                return 'item-stable';
+            }
+        }
+        //if the suplied character is null and the active character is namelesss and keyless
+        else if (!characterToCheck && $scope.activeCharacter && 
+                    !$scope.activeCharacter.name && !$scope.activeCharacter.key && $scope.activeCharacter.initialized) {
+            return 'item-stable';
+        }
+
+        return null;
+    };
+    
 
     $scope.deleteCharacter = function(name) {
         

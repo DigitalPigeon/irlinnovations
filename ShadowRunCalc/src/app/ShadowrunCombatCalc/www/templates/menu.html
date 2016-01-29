@@ -16,11 +16,12 @@
             </ion-header-bar>
             <ion-content>
                 <ion-list>
-                    <ion-item menu-close class="item-text-wrap" ng-click="show('app.myCharacter')" >
-                        My Character
+                    <ion-item menu-close ng-if="activeCharacter.initialized" class="item-text-wrap" ng-click="show('app.myCharacter')" >
+                        Edit {{activeCharacter.name || 'Character'}}
                     </ion-item>
                     
-                    <ion-item class=" list-divider"></ion-item>
+                    <ion-item class="list-divider" ng-if="activeCharacter.initialized"></ion-item>
+
                     <ion-item menu-close ng-click="startOver()" >
                         Start Over
                     </ion-item>

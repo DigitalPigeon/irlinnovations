@@ -2,9 +2,11 @@
     <ion-content class="padding animated fadeIn" irl-workflow-swipeable >
         
         <div class="list" >
-            <div class="item list-divider row-no-top-border row-no-side-border"><b>Start a new character</b></div>
-            <a class="item row-no-side-border item-text-wrap" ng-click="newCharacter()" >
-                New Character
+            <div class="item list-divider row-no-top-border row-no-side-border"><b>Select a character to use</b></div>
+            <a class="item row-no-side-border item-text-wrap" 
+                ng-class="isActiveCharacter(null)"
+                ng-click="newCharacter()" >
+                Blank Character
             </a>
             
         </div>
@@ -13,7 +15,10 @@
             
             <div class="item list-divider row-no-top-border row-no-side-border"><b>or load an existing character</b></div>
             
-            <a class="item item-icon-right  row-no-side-border item-text-wrap" ng-repeat="character in characters" ng-click="loadCharacter(character.name); " >
+            <a class="item item-icon-right  row-no-side-border item-text-wrap"  
+               ng-repeat="character in characters" 
+               ng-class="isActiveCharacter(character)"
+               ng-click="loadCharacter(character.name); " >
                 {{character.name}}
                 
                 <i class="icon ion-trash-a button-assertive" ng-click="deleteCharacter(character.name); $event.stopPropagation();"></i>
