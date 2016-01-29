@@ -1,15 +1,17 @@
 <div ng-repeat="category in categories">
 
+    <!-- Support for multiple data categories in a single service-->
     <div class="list" ng-if="isModifierApplicable(category.items)">
 
         <!-- if a name isn't passed in, don't even bother rendering the header -->
         <div class="item item-icon-right list-divider row-no-top-border row-no-side-border" style="padding-bottom:10px;" ng-if="name">
             <b>{{category.name}}</b>
-            <a ng-show="infoPageState" ng-click="showInfoPage(infoPageState); $event.stopPropagation();">
+            <a ng-show="category.infoPageState" ng-click="showInfoPage(category.infoPageState); $event.stopPropagation();">
                 <i class="icon ion-help positive icon-smaller"></i>
             </a>
         </div>
         
+        <!-- inline selections -->
         <a ng-repeat="item in category.items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!category.popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfPopout();">
             <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
@@ -22,7 +24,7 @@
 
 
         <!-- Popout selections -->
-        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="category.popout" ng-click="show('app.popout', {name: name, itemServiceName: itemServiceName})" ui-srex="app.popout({name: name, itemServiceName: itemServiceName})">
+        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="category.popout" ng-click="show('app.popout', {name: category.name, itemServiceName: itemServiceName, alwaysApplicable: alwaysApplicable, limitToCategory:category.categoryName})" >
             <i class="icon ion-android-checkbox" ng-show="category.item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!category.item.checked"></i>
             <small>

@@ -7,17 +7,28 @@ angular.module('starter.directives', [])
         scope: {
             itemServiceName: '@',
             name: '@',
-            blockPopout: '=',
-            alwaysApplicable: '='
+            limitToCategory: '@',
+            alwaysApplicable: '=',
+            blockPopout: '='
+            
         },
         templateUrl: 'templates/common/modifierBlock.html'
     };
 })
 
-.directive('irlIonHr', function () {
+.directive('irlWorkflowSwipeable', function () {
     return {
-        restrict: 'E',                
-        templateUrl: 'templates/common/irlIonHr.html',
+        restrict: 'A',
+        link: function (scope, element, attribute) {
+
+            element.on('swipeleft', function (event) {
+                scope.show(scope.nextWorkflowState());
+            });
+
+            element.on('swiperight', function (event) {
+                scope.show(scope.previousWorkflowState());
+            });
+        }
     };
 })
 

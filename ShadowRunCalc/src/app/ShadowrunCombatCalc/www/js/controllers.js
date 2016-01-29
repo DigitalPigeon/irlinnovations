@@ -9,7 +9,8 @@ angular.module('starter.controllers', [])
 
         var currentState = $ionicHistory.currentStateName();
 
-        var previousState = null;
+        //provide the last as our target if we match the first state
+        var previousState = $scope.workflowStates[$scope.workflowStates.length-1];
 
         for (var index=0; index < $scope.workflowStates.length; index++)
         {
@@ -40,8 +41,8 @@ angular.module('starter.controllers', [])
             }
         }
         
-        //nothing matched, so there is no next state
-        return null;
+        //nothing matched, so go back to begining
+        return $scope.workflowStates[0];
     }
 
 
@@ -184,88 +185,110 @@ angular.module('starter.controllers', [])
 
 .controller('MyCharacterCtrl', function ($scope, character, domainCharacter) {
             
-            $scope.saveCharacter = function() {
-                if ($scope.character.name) {
-                    console.log('name: ' + '"' + $scope.character.name + '"');
-                    domainCharacter.persist($scope.character);
-                } else {
-                    console.log('Not saving blank name');
-                }
-                $scope.goBack();
-            };
+    $scope.saveCharacter = function() {
+        if ($scope.character.name) {
+            domainCharacter.persist($scope.character);
+        } 
+        $scope.goBack();
+    };
 
-            $scope.character = character.character();
+    $scope.character = character.character();
 
-        })
+    
+    //$scope.$watchCollection(function() { return character.character(); }, function(newVal, oldVal) {
+        //console.log('stuff changed!');
+        //$scope.character = character.character();
+    //});
 
-
+})
 
 .controller('PopoutCtrl', function ($scope, $stateParams) {
     $scope.name = $stateParams.name;
     $scope.itemServiceName = $stateParams.itemServiceName;
-
+    $scope.alwaysApplicable = $stateParams.alwaysApplicable;
+    $scope.limitToCategory = $stateParams.limitToCategory;
 })
 
 .controller('ModifierBlockCtrl', function ($rootScope, $scope, $state, $injector, $ionicPopup, modifiersService, attackTypeService) {
 
+    $scope.$on('$ionicView.enter', function() {
+        console.log('Modifier Block for ' + $scope.name);
+    });
+
     var itemService = $injector.get($scope.itemServiceName);
 
-    var allItems = itemService.all();
+    var rebind = function() {
+        
+        var allItems = itemService.all();
 
-    var lastCategory = 'unknown';
-    var categoryCount = -1;
+        var lastCategory = 'unknown';
+        var categoryCount = -1;
 
-    $scope.categories = [];
+        $scope.categories = [];
 
-    angular.forEach(allItems, function(value)    {
-        if (lastCategory != value.category)
-        {
-            lastCategory = value.category;
-            categoryCount++;
-            $scope.categories[categoryCount] = { items: [], name: value.category || $scope.name};
-        }
-
-        $scope.categories[categoryCount].items.push(value);
-    });
-
-    
-    angular.forEach($scope.categories, function (category) {
-    
-        category.infoPageState = itemService.infoPageState;
-
-
-        category.popout = false;
-
-        //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
-        if (category.items.length > 0 && category.items[0].exclusiveGroup && $scope.name && !$scope.blockPopout) {
-            //exclusive group found. Default to using popout unless not all options are exclusive
-            category.popout = true;
-            var exclsuiveGroup = category.items[0].exclusiveGroup;
-            angular.forEach(category.items, function (value, key) {
-                //if the exclusive group is not consistent, do not allow popout;
-                if (value.exclusiveGroup != exclsuiveGroup) {
-                    category.popout = false;
+        angular.forEach(allItems, function(value)    {
+        
+            //if we have requested a specific category, only inculde items of that category
+            if (!$scope.limitToCategory || $scope.limitToCategory == value.category)
+            {
+                if (lastCategory != value.category)
+                {
+                    lastCategory = value.category;
+                    categoryCount++;
+                    $scope.categories[categoryCount] = { items: [], name: value.category || $scope.name, categoryName: value.category};
                 }
-            });
-        }
 
-        if (category.popout) {
-            $scope.$watch(function () {
-                var items = [];
+                $scope.categories[categoryCount].items.push(value);
+            }
+        });
+
+            
+    
+        angular.forEach($scope.categories, function (category) {
+    
+            category.infoPageState = itemService.infoPageState;
+
+
+            category.popout = false;
+
+            //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
+            if (category.items.length > 0 && category.items[0].exclusiveGroup && $scope.name && !$scope.blockPopout) {
+                //exclusive group found. Default to using popout unless not all options are exclusive
+                category.popout = true;
+                var exclsuiveGroup = category.items[0].exclusiveGroup;
                 angular.forEach(category.items, function (value, key) {
-                    if (value.checked) { items.push(value) }
+                    //if the exclusive group is not consistent, do not allow popout;
+                    if (value.exclusiveGroup != exclsuiveGroup) {
+                        category.popout = false;
+                    }
                 });
-                if (items && items.length > 0) {
-                    return items[0]
-                };
-                return null;
-            }, function (newItem, oldItem) {
-                category.item = newItem || { name: 'None Selected', checked: false }
-            });
-        }
+            }
 
-    });
+            if (category.popout) {
+                $scope.$watch(function () {
+                    var items = [];
+                    angular.forEach(category.items, function (value, key) {
+                        if (value.checked) {
+                            items.push(value);
+                        }
+                    });
+                    if (items.length > 0) {
+                        return items[0];
+                    };
+                    return null;
+                }, function (newItem, oldItem) {
+                    category.item = newItem || { name: 'None Selected', checked: false }
+                });
+            }
 
+        });
+
+    }; //end rebind function
+
+    //when the values returned from the item service would be different, its time to rebind
+    $scope.$watch(function () { return itemService.all(); }, function() {
+        rebind();
+    }); 
     
 
     $scope.showNotes = function (notes) {        

@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.db', 'starter.domain', 'starter.con
 
     //popout editor
     .state('app.popout', {
-        url: '/popout/:name/:itemServiceName',
+        url: '/popout/:name/:itemServiceName/:alwaysApplicable/:limitToCategory',
         views: {
             'menuContent': {
                 templateUrl: 'templates/common/popout.html',
