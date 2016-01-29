@@ -1,35 +1,26 @@
-<ion-view view-title="Welcome">
-  <ion-content class="padding">
-      <p>
-          Welcome to DigitalPigeon's Shadowrun 5e Combat Calculator
-      </p>
+<ion-view view-title="1.1.0" >
+    <ion-content class="padding">
+        
+        <p>
+            Welcome to DigitalPigeon's Shadowrun Combat Calculator
+        </p>
       
-      <p>
-          This tool provides quick calculations for common combat modifiers to determine affects on Attacker and Defender pools, Damage Value (DV), and Armor Penatration (AP)
-      </p>
+        <p>
+            This tool provides quick calculations for common combat modifiers to determine affects on Attacker and Defender pools, Damage Value (DV), and Armor Penatration (AP)
+        </p>
 
-      <p>
-          To use, switch between ranged attacks and melee attacks from the slide out menu. 
-          Set the attacker's and defender's modifers, in addition to any environmental factors, across the different tabs.
-          You can also set ongoing character specific influences (such as cyberware) in the slide out menu as well.
-          Finally, go to the results tabs to see the final calculations.
-      </p>
+        <p>
+            Select the type of action you'd like to take, and then select all applicable options. 
+            <b>Note that you can swipe left and right on most pages to go forward and backwards.</b>
+        </p>
 
-      <p>Special thanks to my gaming group and testers,  Fullmetal, Grimwulf, Romulas, Slyck, and Zippy</p>
+        <p>Special thanks to my gaming group and testers, Fullmetal, Grimwulf, Romulas, Slyck, and Zippy</p>
 
-      <br/>
+        <br/>
 
-      <div>
       
-          <center>
-              <a class="button button-dark button-full" type="button" href="#" ui-sref="app.start" >Use Workflow Mode</a>
-          </center>
+        <button class="button button-dark button-full" type="button" ng-click="startOver()" >Go Calculate Yourself!</button>
+        
 
-      </div>
-      
-      <ion-footer-bar >
-          <small>Build 1.1.0</small>
-      </ion-footer-bar>
-
-  </ion-content>
+    </ion-content>
 </ion-view>

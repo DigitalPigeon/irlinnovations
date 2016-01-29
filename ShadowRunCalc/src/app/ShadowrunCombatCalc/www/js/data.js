@@ -28,6 +28,40 @@ angular.module('starter.data', [])
     };
 })
 
+.factory('character', function () {
+
+    var newCharacter = function() {
+        return {
+            name: '',
+            agility: 0,
+            strength: 0,
+            options:[
+                        { id: 1, category:'Equipment', name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
+                        { id: 2, category:'Equipment', name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
+
+                        { id: 17, category:'Adept Powers', name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true },
+                        { id: 18, category:'Adept Powers', name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple:true  }
+            ]
+        };
+    };
+
+    var character = newCharacter();
+    
+    return {
+        all: function () {
+            return character.options;
+        },
+        character: function () {
+            return character;
+        },
+        createNewCharacter: function () {
+            character = newCharacter();
+            return character;
+        }
+    };
+})
+
+
 .factory('martialArts', function () {
 
     var options = [
@@ -38,7 +72,7 @@ angular.module('starter.data', [])
             { id: 21, name: 'Haymaker', ap: 0, dv: 1, attackerPool: 0, defenderPool: 2, melee: true, exclusiveGroup: 'action', },
             { id: 22, name: 'Pouncing Dragon', ap: 0, dv: 2, attackerPool: 0, defenderPool: 0, melee: true, exclusiveGroup: 'action', notes: 'Requires superior position or the target being prone.' }
     ];
-
+    
     return {
         all: function () {
             return options;
@@ -46,20 +80,6 @@ angular.module('starter.data', [])
     };
 })
 
-.factory('adeptPowers', function () {
-
-    var options = [
-            { id: 17, name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true },
-            { id: 18, name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple:true  }
-            
-    ];
-
-    return {
-        all: function () {
-            return options;
-        }
-    };
-})
 
 .factory('firingModes', function () {
 
@@ -184,20 +204,6 @@ angular.module('starter.data', [])
     };
 })
 
-
-.factory('equipmentService', function () {
-
-    var options = [
-            { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
-            { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' }
-        ];
-
-    return {
-        all: function () {
-            return options;
-        }
-    };
-})
 
 .factory('visibilityModifiers', function () {
 

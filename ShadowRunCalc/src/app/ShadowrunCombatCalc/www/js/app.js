@@ -90,16 +90,27 @@ angular.module('starter', ['ionic', 'starter.db', 'starter.domain', 'starter.con
     }) 
 
     //workflows
-    .state('app.start', {
-        url: '/app/start',
+    .state('app.characterSelection', {
+        url: '/characterSelection',
         views: {
             'menuContent': {
-                    templateUrl: 'templates/workflow/start.html',
-                    controller: 'StartCtrl'
+                templateUrl: 'templates/workflow/characterSelection.html',
+                controller: 'CharacterSelectionCtrl'
                 }
             }
         })
 
+    .state('app.action', {
+        url: '/action',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/workflow/action.html',
+                controller: 'ActionCtrl'
+            }
+        }
+    })
+
+    
     .state('app.attack', {
         url: '/app/attack',
         views: {

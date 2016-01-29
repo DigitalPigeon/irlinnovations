@@ -21,7 +21,7 @@
                     </ion-item>
                     
                     <ion-item class=" list-divider"></ion-item>
-                    <ion-item menu-close ng-href="#/workflow/start" >
+                    <ion-item menu-close ng-click="startOver()" >
                         Start Over
                     </ion-item>
                     <ion-item menu-close nav-clear class="item-text-wrap" ng-click="reset(false)" >
@@ -33,7 +33,7 @@
                     
                     <ion-item class=" list-divider"></ion-item>
                     
-                    <ion-item menu-close ng-href="#/app/welcome">
+                    <ion-item menu-close ng-click="show('app.welcome')">
                         About
                     </ion-item>
                 </ion-list>

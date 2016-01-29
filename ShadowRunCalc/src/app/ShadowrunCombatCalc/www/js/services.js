@@ -32,7 +32,12 @@ angular.module('starter.services', [])
                 //include every factory from the data module
                 angular.forEach(module._invokeQueue, function (serviceInvoker, key) {
                     var service = $injector.get(serviceInvoker[2][0]);
-                    angular.forEach(service.all(), function (value, key) { modifiers.push(value); });                    
+                    if (service.all) {
+                        angular.forEach(service.all(), function(value, key) {
+                            value.dataServiceName = serviceInvoker[2][0];
+                             modifiers.push(value);
+                        });
+                    }
                 });               
                 
                 return modifiers;

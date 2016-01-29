@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, db, domainCharacter) {
 
-    $scope.workflowStates = ['app.start','app.attack','app.target','app.environment','app.result'];
+    $scope.workflowStates = ['app.characterSelection', 'app.action','app.attack','app.target','app.environment','app.result'];
     $scope.startState = $scope.workflowStates[0];
 
     $scope.previousWorkflowState = function() {
@@ -85,12 +85,53 @@ angular.module('starter.controllers', [])
         });
     };
 
-    
+    $scope.goBack = function() {
+        $rootScope.$ionicGoBack();
+    };
+
+    $scope.goNextWorkflowState = function() { $scope.show($scope.nextWorkflowState()); };
+    $scope.goPreviousWorkflowState = function() { $scope.show($scope.previousWorkflowState()); };
+
 
 })
 
-.controller('StartCtrl', function($scope) {
+.controller('CharacterSelectionCtrl', function($scope, $ionicPopup, character, domainCharacter) {
+
+    var rebind = function() {
+        $scope.characters = domainCharacter.retrieveAll();        
+    };
+            
+
+    $scope.$on('$ionicView.enter', function() {
+        rebind();
+    });
+
+    $scope.newCharacter = function() {
+        character.createNewCharacter();
+        $scope.goNextWorkflowState();
+    };
+
+    $scope.loadCharacter = function(name) {
+        domainCharacter.retrieveInto(name, character.character());
+        $scope.goNextWorkflowState();
+    };
+
+    $scope.deleteCharacter = function(name) {
+        
+    $ionicPopup.confirm({ title: 'Delete Character', template: 'Permanently delete "' + name + '"?' })
+        .then(function(result) {
+            if (result) {
+                domainCharacter.del(name);
+                rebind();
+            }
+        });
+    }
+            
 })
+
+.controller('ActionCtrl', function($scope) {
+})
+
 
 .controller('AttackCtrl', function ($scope, $ionicScrollDelegate) {
 
@@ -141,8 +182,21 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('MyCharacterCtrl', function ($scope) {
-})
+.controller('MyCharacterCtrl', function ($scope, character, domainCharacter) {
+            
+            $scope.saveCharacter = function() {
+                if ($scope.character.name) {
+                    console.log('name: ' + '"' + $scope.character.name + '"');
+                    domainCharacter.persist($scope.character);
+                } else {
+                    console.log('Not saving blank name');
+                }
+                $scope.goBack();
+            };
+
+            $scope.character = character.character();
+
+        })
 
 
 
@@ -208,12 +262,12 @@ angular.module('starter.controllers', [])
 
     
 
-    $scope.goBackIfRequired = function() {
+    $scope.goBackIfPopout = function() {
         if (!$scope.name) {
             $rootScope.$ionicGoBack();
         }
     };
-
+    
 
     $scope.isModifierApplicable = function(modifiers) { return $scope.alwaysApplicable || attackTypeService.isModifierApplicable(modifiers) ; }
     $scope.formatStats = modifiersService.formatStats;

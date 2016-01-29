@@ -54,13 +54,13 @@ angular.module('starter.db', [])
 
         },
         insert: function (table, key, object) {
-            console.log('insert ' + key + ' @ ' + table + ' with ' + object);
+            console.log('insert ' + key + ' @ ' + table + ' with ' + JSON.stringify(object));
             $window.localStorage[createKey(table, key)] = JSON.stringify(object);
             return object;
         },
 
         update: function (table, key, object) {
-            console.log('update ' + key + ' @ ' + table + ' to ' + object);
+            console.log('update ' + key + ' @ ' + table + ' to ' + JSON.stringify(object));
             $window.localStorage[createKey(table, key)] = JSON.stringify(object);
             return;
         },

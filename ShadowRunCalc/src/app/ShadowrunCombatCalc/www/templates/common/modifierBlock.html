@@ -9,7 +9,7 @@
             </a>
         </div>
 
-        <a ng-repeat="item in items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfRequired();">
+        <a ng-repeat="item in items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfPopout();">
             <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
             <small>                

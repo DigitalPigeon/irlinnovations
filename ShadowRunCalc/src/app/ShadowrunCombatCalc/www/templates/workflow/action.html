@@ -1,0 +1,11 @@
+<ion-view view-title="Action" hide-back-button="true">
+    <ion-content class="padding animated fadeIn" on-swipe-right="goPreviousWorkflowState()" on-swipe-left="goNextWorkflowState()">
+        
+        <h3>Whatchya gonna do chum?</h3>
+
+        <a class="button button-dark button-full" type="button" ng-click="changeAttackType('{{rangedAttackType}}'); goNextWorkflowState();" >Ranged Attack</a>
+        
+        <a class="button button-dark button-full" type="button" ng-click="changeAttackType('{{meleeAttackType}}'); goNextWorkflowState();" >Melee Attack</a>
+
+    </ion-content>
+</ion-view>
