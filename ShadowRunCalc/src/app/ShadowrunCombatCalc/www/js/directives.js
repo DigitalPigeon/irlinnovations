@@ -3,7 +3,7 @@ angular.module('starter.directives', [])
 .directive('modifierBlock', function () {
     return {
         restrict: 'E',
-        controller: 'ModifierBlockCtrl',
+        controller: 'ModifierBlockCtrl',        
         scope: {
             itemServiceName: '@',
             name: '@',

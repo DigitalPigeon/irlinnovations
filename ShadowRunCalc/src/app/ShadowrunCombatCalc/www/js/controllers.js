@@ -55,7 +55,7 @@ angular.module('starter.controllers', [])
         attackTypeService.changeAttackType(newAttackType);
     };
 
-    $scope.show = function(state) { $state.go(state); };
+    $scope.show = function (state, config) { $state.go(state, config); };
 
     $scope.startOver=function() {
         $ionicHistory.clearHistory();
@@ -210,43 +210,63 @@ angular.module('starter.controllers', [])
 
     var itemService = $injector.get($scope.itemServiceName);
 
-    $scope.items = itemService.all();
-    $scope.infoPageState = itemService.infoPageState;
+    var allItems = itemService.all();
 
+    var lastCategory = 'unknown';
+    var categoryCount = -1;
 
-    $scope.popout = false;
+    $scope.categories = [];
 
-    //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
-    if ($scope.items.length > 0 && $scope.items[0].exclusiveGroup && $scope.name && !$scope.blockPopout) {
-        
-        //exclusive group found. Default to using popout unless not all options are exclusive
-        $scope.popout = true;
-        var exclsuiveGroup = $scope.items[0].exclusiveGroup;
-        angular.forEach($scope.items, function (value, key) {
-            //if the exclusive group is not consistent, do not allow popout;
-            if (value.exclusiveGroup != exclsuiveGroup) {
-                $scope.popout = false;
-            }
-        });
-    }
+    angular.forEach(allItems, function(value)    {
+        if (lastCategory != value.category)
+        {
+            lastCategory = value.category;
+            categoryCount++;
+            $scope.categories[categoryCount] = { items: [], name: value.category || $scope.name};
+        }
+
+        $scope.categories[categoryCount].items.push(value);
+    });
+
     
-    if ($scope.popout)
-    {
-        $scope.$watch(function () {
-            var items = [];
-            angular.forEach(itemService.all(), function (value, key) {
-                if (value.checked) { items.push(value) }
+    angular.forEach($scope.categories, function (category) {
+    
+        category.infoPageState = itemService.infoPageState;
+
+
+        category.popout = false;
+
+        //scan all of the items. if they are all in the same exclusive group, then use the popout control instead
+        if (category.items.length > 0 && category.items[0].exclusiveGroup && $scope.name && !$scope.blockPopout) {
+            //exclusive group found. Default to using popout unless not all options are exclusive
+            category.popout = true;
+            var exclsuiveGroup = category.items[0].exclusiveGroup;
+            angular.forEach(category.items, function (value, key) {
+                //if the exclusive group is not consistent, do not allow popout;
+                if (value.exclusiveGroup != exclsuiveGroup) {
+                    category.popout = false;
+                }
             });
-            if (items && items.length > 0) {
-                return items[0]
-            };
-            return null;
-        }, function (newItem, oldItem) {
-                $scope.item = newItem || { name: 'None Selected', checked: false }});
-    }
-        
-    
+        }
 
+        if (category.popout) {
+            $scope.$watch(function () {
+                var items = [];
+                angular.forEach(category.items, function (value, key) {
+                    if (value.checked) { items.push(value) }
+                });
+                if (items && items.length > 0) {
+                    return items[0]
+                };
+                return null;
+            }, function (newItem, oldItem) {
+                category.item = newItem || { name: 'None Selected', checked: false }
+            });
+        }
+
+    });
+
+    
 
     $scope.showNotes = function (notes) {        
         $ionicPopup.show({
@@ -268,7 +288,7 @@ angular.module('starter.controllers', [])
         }
     };
     
-
+    $scope.show = function (state, config) { $state.go(state, config); };
     $scope.isModifierApplicable = function(modifiers) { return $scope.alwaysApplicable || attackTypeService.isModifierApplicable(modifiers) ; }
     $scope.formatStats = modifiersService.formatStats;
     $scope.validateSelection = function (currentSelection, toggle) { modifiersService.validateSelection(currentSelection, toggle); }

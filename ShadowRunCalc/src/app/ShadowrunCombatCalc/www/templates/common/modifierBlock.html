@@ -1,39 +1,40 @@
-    <!-- Inline selections -->
-    <div class="list" ng-if="isModifierApplicable(items)" >
+<div ng-repeat="category in categories">
+
+    <div class="list" ng-if="isModifierApplicable(category.items)">
 
         <!-- if a name isn't passed in, don't even bother rendering the header -->
         <div class="item item-icon-right list-divider row-no-top-border row-no-side-border" style="padding-bottom:10px;" ng-if="name">
-            <b>{{name}}</b>
-            <a ng-show="infoPageState" ng-click="showInfoPage(infoPageState)">
+            <b>{{category.name}}</b>
+            <a ng-show="infoPageState" ng-click="showInfoPage(infoPageState); $event.stopPropagation();">
                 <i class="icon ion-help positive icon-smaller"></i>
             </a>
         </div>
-
-        <a ng-repeat="item in items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfPopout();">
-            <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
-            <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
-            <small>                
-                <span class="line">{{item.name}}</span>
-                <span class="line modifier-stats">{{formatStats(item, '(', ')', ', ')}}</span>                
-            </small>
-            <i class="icon ion-help positive  icon-smaller" ng-show="item.notes" ion-stop-event="click" ng-click="showNotes(item.notes);"></i>            
-        </a>
-
-
-        <!-- Popout selections -->
-        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="popout"  ui-sref="app.popout({name: name, itemServiceName: itemServiceName})">
+        
+        <a ng-repeat="item in category.items" class="item item-icon-left item-icon-right row-no-side-border item-text-wrap" ng-if="!category.popout && isModifierApplicable(item)" ng-click="validateSelection(item, true); goBackIfPopout();">
             <i class="icon ion-android-checkbox" ng-show="item.checked"></i>
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
             <small>
                 <span class="line">{{item.name}}</span>
                 <span class="line modifier-stats">{{formatStats(item, '(', ')', ', ')}}</span>
             </small>
-            <i class="icon ion-help positive  icon-smaller" ng-show="item.notes" ion-stop-event="click" ng-click="showNotes(item.notes);"></i>            
+            <i class="icon ion-help positive  icon-smaller" ng-show="item.notes" ion-stop-event="click" ng-click="showNotes(item.notes); $event.stopPropagation();"></i>
+        </a>
+
+
+        <!-- Popout selections -->
+        <a class="item item-icon-left item item-icon-right row-no-side-border item-text-wrap" ng-if="category.popout" ng-click="show('app.popout', {name: name, itemServiceName: itemServiceName})" ui-srex="app.popout({name: name, itemServiceName: itemServiceName})">
+            <i class="icon ion-android-checkbox" ng-show="category.item.checked"></i>
+            <i class="icon ion-android-checkbox-outline-blank" ng-show="!category.item.checked"></i>
+            <small>
+                <span class="line">{{category.item.name}}</span>
+                <span class="line modifier-stats">{{formatStats(category.item, '(', ')', ', ')}}</span>
+            </small>
+            <i class="icon ion-help positive  icon-smaller" ng-show="category.item.notes" ion-stop-event="click" ng-click="showNotes(category.item.notes); return; $event.stopPropagation();"></i>
         </a>
 
         <br />
 
     </div>
-    
+</div>
         
 
