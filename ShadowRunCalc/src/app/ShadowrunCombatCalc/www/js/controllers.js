@@ -218,10 +218,10 @@ angular.module('starter.controllers', [])
     $scope.character = character.character();
 
     
-    //$scope.$watchCollection(function() { return character.character(); }, function(newVal, oldVal) {
-        //console.log('stuff changed!');
-        //$scope.character = character.character();
-    //});
+    $scope.$watch(function() { return character.character(); }, function(newVal, oldVal) {
+        console.log('stuff changed!');
+        $scope.character = character.character();
+    });
 
 })
 
