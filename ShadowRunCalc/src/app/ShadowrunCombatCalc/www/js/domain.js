@@ -1,12 +1,6 @@
-var domain = function (db, table, itemTemplate, keyValueSelector, getDependancies)
+var domain = function (db, table, keyValueSelector)
 {
     return {
-
-        create: function() {
-            var item = angular.copy(itemTemplate);
-            console.log('created');
-            return item;
-        },
 
         retrieve: function (key) {
             var item = db.select(table, key);
@@ -35,10 +29,6 @@ var domain = function (db, table, itemTemplate, keyValueSelector, getDependancie
 
         persist: function (item) {
 
-            if (getDependancies) {
-                item.domainDependancies = getDependancies();
-            }
-
             if (!item.key) {
                 item.key = keyValueSelector(item);
                 db.insert(table, item.key, item);
@@ -62,47 +52,30 @@ angular.module('starter.domain', [])
 
 
 
-.factory('domainCharacter', ['db', 'modifiersService', function (db, modifiersService) {
+.factory('domainCharacter', ['db', function (db) {
 
     var table = 'character';
-
-    var childDataServices = ['martialArts', 'adeptPowers'];
-
-    var getDependancies = function () {
-        var selected = [];
-        var all = modifiersService.all();
-
-        angular.forEach(all, function (value) {
-            //console.log(value.name + ', value.dataServiceName: ' + value.dataServiceName)
-            if (childDataServices.indexOf(value.dataServiceName) >=0 && value.checked) {
-                selected.push(value);
-            }
-        });
-
-        return selected;
-    }
-
-    var itemTemplate = {
-        key:'',
-        name:''
-    };
 
     var keyValueSelector = function (item) {
         return item.name;
     };
 
-    return domain(db, table, itemTemplate, keyValueSelector);
-        /*
-            {
-            create: function () { return domain.create(db, itemTemplate); },
-            retrieve: function (key) { return domain.retrieve(db, tableName, key); },
-            retrieveInto: function (key, itemToUpdate) { return domain.retrieveInto(db, tableName, key, itemToUpdate); },
-            retrieveAll: function () { return domain.retrieveAll(db, tableName); },
-            del: function (key) { return domain.del(db, tableName, key); },
-            persist: function (item) { return domain.persist(db, tableName, item, getValueForKey); }
-            }
-            */
+    return domain(db, table, keyValueSelector);
 
     }])
+
+
+.factory('domainAction', ['db', function (db) {
+
+    var table = 'action';
+    
+    var keyValueSelector = function (item) {
+        return item.name;
+    };
+
+    return domain(db, table, keyValueSelector);
+
+} ])
+
 
 ;

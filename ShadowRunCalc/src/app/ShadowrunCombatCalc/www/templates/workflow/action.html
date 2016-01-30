@@ -1,11 +1,37 @@
 <ion-view view-title="Action" hide-back-button="true">
-    <ion-content class="padding animated fadeIn" irl-workflow-swipeable>
+    <ion-content class="padding animated fadeIn" irl-workflow-swipeable >
         
-        <h3>Whatchya gonna do chum?</h3>
+        <div class="list" >
+            <div class="item list-divider row-no-top-border row-no-side-border"><b>Whatchya wanna do, chum?</b></div>
 
-        <a class="button button-dark button-full" type="button" ng-click="changeAttackType('{{rangedAttackType}}'); goNextWorkflowState();" >Ranged Attack</a>
+            <a class="item row-no-side-border item-text-wrap" 
+               ng-class="isActiveAction(null, '{{rangedAttackType}}')"  
+               ng-click="useDefaultAction('{{rangedAttackType}}');" >
+                Basic Ranged Attack
+            </a>
         
-        <a class="button button-dark button-full" type="button" ng-click="changeAttackType('{{meleeAttackType}}'); goNextWorkflowState();" >Melee Attack</a>
+            <a class="item row-no-side-border item-text-wrap" 
+                ng-class="isActiveAction(null, '{{meleeAttackType}}')" 
+                ng-click="useDefaultAction('{{meleeAttackType}}'); " >
+                Basic Melee Attack
+            </a>
+        </div>
+        
+        <div class="list" >
+            
+            <div class="item list-divider row-no-top-border row-no-side-border"><b>or maybe a saved action?</b></div>
+            
+            <a class="item row-no-side-border item-text-wrap item-icon-right" 
+               ng-repeat="savedAction in savedActions"  
+               ng-click="loadSavedAction(savedAction.name)" 
+               ng-class="isActiveAction(savedAction.name)" >
+                
+                {{savedAction.name}}
+                <i class="icon ion-trash-a button-assertive"  ng-click="deleteSavedAction(savedAction.name); $event.stopPropagation();"></i>
+
+            </a>
+
+        </div>
 
     </ion-content>
 </ion-view>

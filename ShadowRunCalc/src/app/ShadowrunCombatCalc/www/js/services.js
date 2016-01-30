@@ -1,15 +1,14 @@
 angular.module('starter.services', [])
-
-.factory('tabAnimationService', function() {
+    .factory('tabAnimationService', function() {
         var tabTracker = { tabIndex: 1 };
 
         return {
             getTransition: function(newTabIndex) {
                 var oldTabIndex = tabTracker.tabIndex;
                 tabTracker.tabIndex = newTabIndex;
-                                
+
                 if (oldTabIndex > newTabIndex) {
-                    
+
                     return 'slideInLeft';
                 } else if (oldTabIndex < newTabIndex) {
                     return 'slideInRight';
@@ -19,6 +18,21 @@ angular.module('starter.services', [])
             }
         }
     })
+
+.factory('actionService', function() {
+
+    var action = { name: null };
+
+    return {
+        setLoadedActionName: function(name) {
+            action.name = name;
+            },
+        getLoadedActionName: function() {
+            return action.name;
+        }
+    };
+
+})
 
 .factory('modifiersService', [  'attackTypeService', '$filter', '$ionicPopup', '$state', '$injector',
                                 function (attackTypeService, $filter, $ionicPopup, $state, $injector) {
@@ -41,6 +55,26 @@ angular.module('starter.services', [])
                 });               
                 
                 return modifiers;
+            },
+
+            applyModifiersState: function(modifiersStates, defaultAction) {
+                angular.forEach(this.all(), function(modifier) {
+                    var matched = false;
+
+                    angular.forEach(modifiersStates, function(newModifier) {
+                        if (modifier.id == newModifier.id && modifier.dataServiceName == newModifier.dataServiceName) {
+                            
+                            angular.copy(newModifier, modifier);
+                            matched = true;
+                        }
+                    });
+
+                    //if we didn't have new state information, then perform the default behaviour if requested
+                    if (!matched && defaultAction) {
+                        defaultAction(modifier);
+                    }
+
+                });
             },
 
             reset: function () {

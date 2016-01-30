@@ -4,6 +4,7 @@ angular.module('starter.controllers', [])
 
     $scope.workflowStates = ['app.characterSelection', 'app.action','app.attack','app.target','app.environment','app.result'];
     $scope.startState = $scope.workflowStates[0];
+    $scope.endState = $scope.workflowStates[$scope.workflowStates.length-1];
     
     $scope.$on('$ionicView.enter', function() {
         $scope.activeCharacter = character.character();
@@ -14,7 +15,7 @@ angular.module('starter.controllers', [])
         var currentState = $ionicHistory.currentStateName();
 
         //provide the last as our target if we match the first state
-        var previousState = $scope.workflowStates[$scope.workflowStates.length-1];
+        var previousState = $scope.endState;
 
         for (var index=0; index < $scope.workflowStates.length; index++)
         {
@@ -46,7 +47,7 @@ angular.module('starter.controllers', [])
         }
         
         //nothing matched, so go back to begining
-        return $scope.workflowStates[0];
+        return $scope.startState;
     }
 
 
@@ -151,7 +152,55 @@ angular.module('starter.controllers', [])
             
 })
 
-.controller('ActionCtrl', function($scope) {
+.controller('ActionCtrl', function($scope, $ionicPopup, modifiersService, actionService, domainAction) {
+
+var rebind = function() {
+        $scope.savedActions = domainAction.retrieveAll();        
+    };
+    
+    $scope.$on('$ionicView.enter', function() {
+        rebind();
+    });
+
+    $scope.deleteSavedAction = function(name) {
+        
+        $ionicPopup.confirm({ title: 'Delete Action', template: 'Permanently delete "' + name + '"?' })
+            .then(function(result) {
+                if (result) {
+                    domainAction.del(name);
+                    rebind();
+                }
+        });
+    }
+
+    $scope.useDefaultAction = function(attackTypeName) {
+        $scope.changeAttackType(attackTypeName);
+        actionService.setLoadedActionName(null);
+        $scope.goNextWorkflowState();   
+    };
+
+    $scope.loadSavedAction = function(name) {
+        
+        var persistanceObject = domainAction.retrieveInto(name);
+        
+        $scope.changeAttackType(persistanceObject.attackType);
+        modifiersService.applyModifiersState(persistanceObject.modifiers, function(unreferencedModifier) {
+            if (unreferencedModifier.dataServiceName != 'character') {
+                unreferencedModifier.checked = false;
+            }
+        });
+        actionService.setLoadedActionName(persistanceObject.name);
+        
+        $scope.goNextWorkflowState();   
+    };
+
+    $scope.isActiveAction = function(actionName, defaultAttackTypeName) {
+        if ((actionService.getLoadedActionName() && actionName == actionService.getLoadedActionName()) ||
+        (!actionService.getLoadedActionName() && defaultAttackTypeName == $scope.attackType.name)) {
+            return 'item-stable';
+        }
+    };
+
 })
 
 
@@ -174,7 +223,7 @@ angular.module('starter.controllers', [])
 .controller('EnvironmentCtrl', function ($scope) {
 })
 
-.controller('ResultCtrl', function ($scope, $stateParams, modifiersService) {
+.controller('ResultCtrl', function ($scope, $stateParams, $ionicPopup, modifiersService, actionService, domainAction) {
 
     var rebind = function() {
         //$scope.selectedModifiers = modifiersService.selected;
@@ -199,7 +248,24 @@ angular.module('starter.controllers', [])
     $scope.$watch(function () { return modifiersService.selectedChecksum(); }, function (newValue, oldValue) {  rebind(); });
 
     $scope.formatStats = modifiersService.formatStats;
-    
+    $scope.saveAction = function() {
+            $ionicPopup.prompt({ title: 'Name this action', defaultText:actionService.getLoadedActionName() })
+            .then(function(result) {
+                if (result) {
+                    var modifiersToSave = [];
+
+                    angular.forEach(modifiersService.all(), function(value) {
+                        if (value.checked && value.dataServiceName != 'character') {
+                            modifiersToSave.push(value);
+                        }
+                    });
+
+                    var persistanceObject = {name: result, modifiers: modifiersToSave, attackType: $scope.attackType.name};
+                    domainAction.persist(persistanceObject);
+                    actionService.setLoadedActionName(result);
+                }
+            });
+        }
 })
 
 

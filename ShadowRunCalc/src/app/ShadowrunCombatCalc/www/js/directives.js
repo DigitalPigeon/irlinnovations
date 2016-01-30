@@ -28,6 +28,16 @@ angular.module('starter.directives', [])
             element.on('swiperight', function (event) {
                 scope.show(scope.previousWorkflowState());
             });
+
+            element.on('doubletap', function (event) {
+                scope.show(scope.endState);
+            });
+
+            element.on('hold', function (event) {
+                scope.show(scope.endState);
+            });
+
+            
         }
     };
 })
