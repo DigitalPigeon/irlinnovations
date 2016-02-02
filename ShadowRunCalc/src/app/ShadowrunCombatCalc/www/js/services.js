@@ -38,7 +38,7 @@ angular.module('starter.services', [])
                                 function (attackTypeService, $filter, $ionicPopup, $state, $injector) {
         return {
             
-            all: function () {
+            all: function (constraint) {
 
                 var module = angular.module('starter.data');
                 var modifiers = [];
@@ -47,9 +47,11 @@ angular.module('starter.services', [])
                 angular.forEach(module._invokeQueue, function (serviceInvoker, key) {
                     var service = $injector.get(serviceInvoker[2][0]);
                     if (service.all) {
-                        angular.forEach(service.all(), function(value, key) {
-                            value.dataServiceName = serviceInvoker[2][0];
-                             modifiers.push(value);
+                        angular.forEach(service.all(), function (value, key) {
+                            if (!constraint || constraint(value)) {
+                                value.dataServiceName = serviceInvoker[2][0];
+                                modifiers.push(value);
+                            }                            
                         });
                     }
                 });               

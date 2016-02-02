@@ -35,26 +35,13 @@ angular.module('starter.data', [])
             initialized: true,
             name: '',
             agility: 0,
-            strength: 0,
-            options:[
-                        { id: 1, category:'Equipment', name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
-                        { id: 2, category:'Equipment', name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun' },
-
-                        { id: 17, category:'Adept Powers', name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true },
-                        { id: 18, category:'Adept Powers', name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple:true  }
-            ]
+            strength: 0
         };
     };
 
     var character = {initialized: false};
     
-    return {
-        all: function () {
-            if (character)
-            {return character.options;} else {
-                return [];
-            }
-        },
+    return {        
         character: function () {
             return character;
         },
@@ -68,6 +55,33 @@ angular.module('starter.data', [])
     };
 })
 
+.factory('equipment', function () {
+
+    var options = [
+                        { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true },
+                        { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true }
+    ]
+
+    return {
+        all: function () {
+            return options;
+        }
+    };
+})
+
+.factory('adeptPowers', function () {
+
+        var options = [
+                            { id: 1, name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true, isCharacterModifier: true },
+                            { id: 2, name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple: true, isCharacterModifier: true }
+        ]
+
+        return {
+            all: function () {
+                return options;
+            }
+        };
+    })
 
 .factory('martialArts', function () {
 

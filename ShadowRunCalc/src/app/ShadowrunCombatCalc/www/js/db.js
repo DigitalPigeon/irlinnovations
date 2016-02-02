@@ -1,9 +1,11 @@
+var dbversion = 1;
+
 angular.module('starter.db', [])
 
 .factory('db', function ($window) {
 
         var keyPrefix = function (table) {
-            return table + '-';
+            return dbversion + '-' + table + '-';
         };
 
         var createKey = function(table, key) {

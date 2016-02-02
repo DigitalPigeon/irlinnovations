@@ -5,9 +5,13 @@
             <input type="text" placeholder="Character Name" ng-model="character.name">
         </label>
         <small style="font-style: italic">*Supply a name to save your character for later</small>
-        <modifier-block name="character categories" item-service-name="character" block-popout="false" always-applicable="true" ></modifier-block>
+        
+        <modifier-block name="Equipment" item-service-name="equipment" block-popout="false" always-applicable="true" ></modifier-block>
+
+        <modifier-block name="Adpet Powers" item-service-name="adeptPowers" block-popout="false" always-applicable="true"></modifier-block>
       
         <button class="button button-dark button-full" type="button" ng-click="saveCharacter()">Save Me!</button>                
 
     </ion-content>
 </ion-view>
+

@@ -1,4 +1,4 @@
-var domain = function (db, table, keyValueSelector)
+var domain = function (db, table, keyValueSelector, components)
 {
     return {
 
@@ -29,6 +29,16 @@ var domain = function (db, table, keyValueSelector)
 
         persist: function (item) {
 
+            angular.forEach(components, function (value) {
+                if (!item[value])
+                    {throw ('Entity ' + table + ' requires a property of ' + value);}
+            });
+
+            if (!keyValueSelector(item))
+            {
+                throw ('Key selector returns null: ' + keyValueSelector);
+            }
+
             if (!item.key) {
                 item.key = keyValueSelector(item);
                 db.insert(table, item.key, item);
@@ -56,11 +66,13 @@ angular.module('starter.domain', [])
 
     var table = 'character';
 
+    var components = ['character', 'modifiers'];
+
     var keyValueSelector = function (item) {
-        return item.name;
+        return item.character.name;
     };
 
-    return domain(db, table, keyValueSelector);
+    return domain(db, table, keyValueSelector, components);
 
     }])
 
@@ -69,11 +81,18 @@ angular.module('starter.domain', [])
 
     var table = 'action';
     
+    var components = ['name', 'modifiers', 'attackType'];
+
     var keyValueSelector = function (item) {
         return item.name;
     };
 
-    return domain(db, table, keyValueSelector);
+    var serialize = function () {
+
+    };
+        
+
+    return domain(db, table, keyValueSelector, components);
 
 } ])
 

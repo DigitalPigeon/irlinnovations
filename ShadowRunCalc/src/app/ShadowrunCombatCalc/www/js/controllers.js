@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, db, character) {
+.controller('AppCtrl', function ($rootScope, $scope, $state, $ionicHistory, $ionicPopup, attackTypeService, modifiersService, actionService, db, character) {
 
     $scope.workflowStates = ['app.characterSelection', 'app.action','app.attack','app.target','app.environment','app.result'];
     $scope.startState = $scope.workflowStates[0];
@@ -83,6 +83,7 @@ angular.module('starter.controllers', [])
             if (result) {
                 modifiersService.reset();
                 character.uninitialize();
+                actionService.setLoadedActionName(null);
 
                 if (clearStorage) {
                     db.reset();
@@ -102,7 +103,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('CharacterSelectionCtrl', function($scope, $ionicPopup, character, domainCharacter) {
+.controller('CharacterSelectionCtrl', function ($scope, $ionicPopup, character, domainCharacter, modifiersService) {
 
     var rebind = function() {
         $scope.characters = domainCharacter.retrieveAll();        
@@ -118,7 +119,15 @@ angular.module('starter.controllers', [])
     };
 
     $scope.loadCharacter = function(name) {
-        domainCharacter.retrieveInto(name, character.character());
+        var persistanceObject = domainCharacter.retrieve(name, character.character());
+        angular.copy(persistanceObject.character, character.character());
+
+        modifiersService.applyModifiersState(persistanceObject.modifiers, function (unreferencedModifier) {
+            if (unreferencedModifier.isCharacterModifier) {
+                unreferencedModifier.checked = false;
+            }
+        });
+
         $scope.goNextWorkflowState();
     };
 
@@ -181,11 +190,11 @@ var rebind = function() {
 
     $scope.loadSavedAction = function(name) {
         
-        var persistanceObject = domainAction.retrieveInto(name);
+        var persistanceObject = domainAction.retrieve(name);
         
         $scope.changeAttackType(persistanceObject.attackType);
         modifiersService.applyModifiersState(persistanceObject.modifiers, function(unreferencedModifier) {
-            if (unreferencedModifier.dataServiceName != 'character') {
+            if (!unreferencedModifier.isCharacterModifier) {
                 unreferencedModifier.checked = false;
             }
         });
@@ -252,16 +261,10 @@ var rebind = function() {
             $ionicPopup.prompt({ title: 'Name this action', defaultText:actionService.getLoadedActionName() })
             .then(function(result) {
                 if (result) {
-                    var modifiersToSave = [];
 
-                    angular.forEach(modifiersService.all(), function(value) {
-                        if (value.checked && value.dataServiceName != 'character') {
-                            modifiersToSave.push(value);
-                        }
-                    });
-
-                    var persistanceObject = {name: result, modifiers: modifiersToSave, attackType: $scope.attackType.name};
-                    domainAction.persist(persistanceObject);
+                    var constraint = function(value) {return value.checked && !value.isCharacterModifier};
+                        
+                    domainAction.persist({name: result, modifiers: modifiersService.all(constraint), attackType: $scope.attackType.name});
                     actionService.setLoadedActionName(result);
                 }
             });
@@ -270,11 +273,14 @@ var rebind = function() {
 
 
 
-.controller('MyCharacterCtrl', function ($scope, character, domainCharacter) {
+.controller('MyCharacterCtrl', function ($scope, character, modifiersService, domainCharacter) {
             
-    $scope.saveCharacter = function() {
+    $scope.saveCharacter = function () {
+
+        var constraint = function (value) { return value.checked && value.isCharacterModifier };
+
         if ($scope.character.name) {
-            domainCharacter.persist($scope.character);
+            domainCharacter.persist({ character: $scope.character, modifiers: modifiersService.all(constraint) });                
         } 
         $scope.goBack();
     };
