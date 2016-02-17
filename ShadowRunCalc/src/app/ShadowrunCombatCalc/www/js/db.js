@@ -1,4 +1,4 @@
-var dbversion = 1;
+var dbversion = 2;
 
 angular.module('starter.db', [])
 
