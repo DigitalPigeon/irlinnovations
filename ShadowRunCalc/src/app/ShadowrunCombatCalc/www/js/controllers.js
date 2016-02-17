@@ -277,7 +277,7 @@ var rebind = function() {
             
     $scope.saveCharacter = function () {
 
-        var constraint = function (value) { return value.checked && value.isCharacterModifier };
+        var constraint = function (value) { return value.checked && value.isCharacterModifier; };
 
         if ($scope.character.name) {
             domainCharacter.persist({ character: $scope.character, modifiers: modifiersService.all(constraint) });                

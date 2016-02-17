@@ -12,7 +12,6 @@ angular.module('starter.data', [])
             { id: 8, name: 'Charging Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 9, name: 'Attacking from Prone', ap: 0, dv: 0, attackerPool: -1, defenderPool: 0, melee: true },
             { id: 10, name: 'Superior Position', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
-            { id: 13, name: 'Attacker has Net Reach', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee:true, allowMultiple: true, exclusiveGroup: 'netReach'},
             { id: 14, name: 'Defender Prone', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true, mutualGroup: 'defenderProne' },
             { id: 15, name: 'Touch-Only Attack', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, melee: true },
             { id: 16, name: 'Friend in Melee', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, melee: true },            
@@ -55,12 +54,12 @@ angular.module('starter.data', [])
     };
 })
 
-.factory('equipment', function () {
+.factory('smartgun', function () {
 
     var options = [
-                        { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true },
-                        { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true }
-    ]
+        { id: 1, name: 'Wireless Smartgun (Gear)', ap: 0, dv: 0, attackerPool: 1, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true },
+        { id: 2, name: 'Wireless Smartgun (Essence)', ap: 0, dv: 0, attackerPool: 2, defenderPool: 0, ranged: true, exclusiveGroup: 'smartgun', isCharacterModifier: true }
+    ];
 
     return {
         all: function () {
@@ -72,9 +71,9 @@ angular.module('starter.data', [])
 .factory('adeptPowers', function () {
 
         var options = [
-                            { id: 1, name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true, isCharacterModifier: true },
-                            { id: 2, name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple: true, isCharacterModifier: true }
-        ]
+            { id: 1, name: 'Critical Strike', ap: 0, dv: 1, attackerPool: 0, defenderPool: 0, melee: true, isCharacterModifier: true },
+            { id: 2, name: 'Penatrating Strike', ap: -1, dv: 0, attackerPool: 0, defenderPool: 0, melee: true, allowMultiple: true, isCharacterModifier: true }
+        ];
 
         return {
             all: function () {
@@ -82,6 +81,20 @@ angular.module('starter.data', [])
             }
         };
     })
+
+.factory('melee', function () {
+
+        var options = [
+            { id: 1, name: "Reach", ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, reach:1, melee: true, allowMultiple: true, isCharacterModifier:true, notes: 'Include natural and weapon reach. Martial arts reach is applied seperately.' }
+        ];
+
+        return {
+            all: function () {
+                return options;
+            }
+        };
+    })
+
 
 .factory('martialArts', function () {
 
@@ -187,7 +200,7 @@ angular.module('starter.data', [])
             { id: 3, name: 'Inside Moving Vehicle', ap: 0, dv: 0, attackerPool: 0, defenderPool: 3 },
             { id: 4, name: 'Set to Receive Charge', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee:true},
             { id: 5, name: 'In Melee Targeted by Ranged', ap: 0, dv: 0, attackerPool: 0, defenderPool: -3, ranged: true },
-            { id: 6, name: 'Defender has Net Reach', ap: 0, dv: 0, attackerPool: 0, defenderPool: 1, melee: true, allowMultiple: true, exclusiveGroup: 'netReach' }
+            { id: 6, name: "Defender's Reach", ap: 0, dv: 0, attackerPool: 0, defenderPool: 0, reach:-1, melee: true, allowMultiple: true }
             
         ];
 

@@ -1,24 +1,5 @@
 angular.module('starter.services', [])
-    .factory('tabAnimationService', function() {
-        var tabTracker = { tabIndex: 1 };
-
-        return {
-            getTransition: function(newTabIndex) {
-                var oldTabIndex = tabTracker.tabIndex;
-                tabTracker.tabIndex = newTabIndex;
-
-                if (oldTabIndex > newTabIndex) {
-
-                    return 'slideInLeft';
-                } else if (oldTabIndex < newTabIndex) {
-                    return 'slideInRight';
-                } else {
-                    return 'fadeIn';
-                }
-            }
-        }
-    })
-
+    
 .factory('actionService', function() {
 
     var action = { name: null };
@@ -195,8 +176,49 @@ angular.module('starter.services', [])
                 var modifiers = [];
 
                 angular.forEach(this.selected(), function (value, key) {
-                    
-                    if (value.defenderPool != 0 && attackTypeService.isModifierApplicable(value)) {
+                
+                    if ((value.defenderPool != 0) && attackTypeService.isModifierApplicable(value)) {
+                        modifiers.push(value);
+                    }
+                });
+
+                //positive reach is a penalty, negative reach is a bonus
+                var reach = this.reachTotal();
+
+                if (reach > 0) {
+                    modifiers.push({ name: 'Attacker Net Reach of ' + reach, defenderPool: reach *-1 });
+                }
+
+                if (reach < 0) {
+                    modifiers.push({ name: 'Defender Net Reach of ' + (reach*-1), defenderPool: reach * -1 });
+                }
+
+                return modifiers;
+
+            },
+            
+            defenderPoolTotal: function () {
+
+                var total = 0;
+
+                angular.forEach(this.affectsDefenderPool(), function (value, key) {
+
+                    total = total + (value.multiplier ? value.multiplier * value.defenderPool : value.defenderPool);
+                });
+
+                return total;
+
+            },
+
+            affectsReach: function () {
+
+                var modifiers = [];
+
+                angular.forEach(this.selected(), function (value, key) {
+
+                    var reach = value.reach || 0;
+
+                    if ((reach != 0) && attackTypeService.isModifierApplicable(value)) {
                         modifiers.push(value);
                     }
                 });
@@ -205,13 +227,13 @@ angular.module('starter.services', [])
 
             },
 
-            defenderPoolTotal: function () {
+            reachTotal: function () {
 
                 var total = 0;
 
-                angular.forEach(this.affectsDefenderPool(), function (value, key) {
+                angular.forEach(this.affectsReach(), function (value, key) {
 
-                    total = total + (value.multiplier ? value.multiplier * value.defenderPool : value.defenderPool);
+                    total = total + (value.multiplier ? value.multiplier * value.reach : value.reach);
                 });
 
                 return total;
@@ -377,6 +399,7 @@ angular.module('starter.services', [])
                 addStat('Def', item.defenderPool, item.multiplier);
                 addStat('DV', item.dv, item.multiplier);
                 addStat('AP', item.ap, item.multiplier);
+                addStat('Reach', item.reach, item.multiplier);
 
                 if (stats.length > 0) {
                     //return prefix + (item.multiplier?'x' + item.multiplier + ' = ':'') + stats.join(seperator) + suffix;

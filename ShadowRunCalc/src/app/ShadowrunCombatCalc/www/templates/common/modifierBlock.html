@@ -17,7 +17,7 @@
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!item.checked"></i>
             <small>
                 <span class="line">{{item.name}} {{item.multiplier}}</span>
-                <span class="line modifier-stats">{{formatStats(item, '(', ')', ', ')}}</span>
+                <span style="font-size: x-small;" class="line modifier-stats">{{formatStats(item, '(', ')', ', ')}}</span>
             </small>
             <i class="icon ion-help positive  icon-smaller" ng-show="item.notes" ion-stop-event="click" ng-click="showNotes(item.notes); $event.stopPropagation();"></i>
         </a>
@@ -29,7 +29,7 @@
             <i class="icon ion-android-checkbox-outline-blank" ng-show="!category.item.checked"></i>
             <small>
                 <span class="line">{{category.item.name}}  {{category.item.multiplier}}</span>
-                <span class="line modifier-stats">{{formatStats(category.item, '(', ')', ', ')}}</span>
+                <span style="font-size: x-small;" class="line modifier-stats">{{formatStats(category.item, '(', ')', ', ')}}</span>
             </small>
             <i class="icon ion-help positive  icon-smaller" ng-show="category.item.notes" ion-stop-event="click" ng-click="showNotes(category.item.notes); return; $event.stopPropagation();"></i>
         </a>
